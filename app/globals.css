@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-color: #2f3a9b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-color: #010314;
+  }
+}
+
+body {
+  @apply overflow-hidden box-border bg-white dark:bg-gray-900;
+}
+
+.side-bar-menu {
+  @apply flex flex-col p-4 gap-4 bg-[var(--brand-color)] h-screen !max-w-[200px];
+}
+
+.side-bar-links {
+  @apply w-full mt-8 flex flex-col gap-8;
+}
+
+.side-bar-link {
+  @apply cursor-pointer p-4 text-white text-base hover:bg-white rounded-md hover:text-[var(--brand-color)];
+}
+
+.header {
+  @apply shadow-md w-[calc(100vw-160px)] h-16 flex justify-end items-center;
+}
+
+.heading1 {
+  @apply text-3xl font-bold;
+}
+.heading2 {
+  @apply text-2xl font-bold text-white;
+}
+.heading3 {
+  @apply text-xl font-bold;
+}
+.input-title {
+  @apply text-base;
+}
+.error-message {
+  @apply text-red-500 text-base;
+}
