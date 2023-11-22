@@ -42,7 +42,7 @@ const Header = (props: Props) => {
         />
       )}
       {loggedIn ? (
-        <Link onClick={handleLogout} className="p-4" href={"/"}>
+        <Link className="p-4" href={"/"}>
           Sign Out
         </Link>
       ) : (

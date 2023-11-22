@@ -1,19 +1,26 @@
 "use client";
-import InputField from "@/component/shared/InputField";
+import InputField from "@/app/component/shared/InputField";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { Button } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
 type Props = {};
 
 const Signin = (props: Props) => {
   const setLoggedIn = useAuthStore((state: AuthState) => state.setLoggedIn);
-  // const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
+  const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
   const router = useRouter();
+
+  useEffect(() => {
+    if (loggedIn) {
+      router.replace("/dashboard");
+    }
+  }, [loggedIn]);
+
   return (
     <div className="flex min-h-screen !w-screen items-center justify-center bg-[var(--brand-color)]">
       <div className="m-4 flex !w-auto flex-col justify-stretch gap-4 rounded-md bg-white p-4 shadow-md sm:!w-2/3 md:!w-2/3 lg:!w-1/3">
