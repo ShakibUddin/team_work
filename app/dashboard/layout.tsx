@@ -4,6 +4,7 @@ import Sidebar from "../component/shared/sidebar";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { useRouter } from "next/navigation";
 import { AuthState } from "@/store/authStore/authStoreTypes";
+import Header from "../component/shared/header";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
@@ -18,11 +19,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [loggedIn]);
 
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-      <div className="w-full flex-none md:w-64">
+    <div className="flex h-screen md:overflow-hidden">
+      <div className="w-fit flex-none">
         <Sidebar />
       </div>
-      <div className="grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+      <div>
+        <Header />
+        <div className="grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+      </div>
     </div>
   );
 };

@@ -1,54 +1,39 @@
+"use client";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
-import Link from "next/link";
-import React, { useState } from "react";
-import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
+import { Button } from "antd";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 type Props = {};
 
 const Header = (props: Props) => {
-  const [darkMood, setDarkMood] = useState(false);
-  const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
+  const { loggedIn, loggedInUser } = useAuthStore((state: AuthState) => state);
   const setLoggedIn = useAuthStore((state: AuthState) => state.setLoggedIn);
-
-  const handleDarkMood = () => {
-    setDarkMood(false);
-  };
-
-  const handleLightMood = () => {
-    setDarkMood(true);
-  };
-
+  // const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
+  const router = useRouter();
   const handleLogout = () => {
     setLoggedIn(false);
+    router.push("/signin");
   };
 
   return (
     <div className="header">
-      {darkMood ? (
-        <BsFillMoonFill
-          style={{ cursor: "pointer" }}
-          className="cursor-pointer"
-          onClick={handleDarkMood}
-          size={20}
-        />
+      {loggedIn ? (
+        <p className="mr-4 !text-blue-400">Hello, {loggedInUser?.firstName}</p>
       ) : (
-        <BsFillSunFill
-          style={{ cursor: "pointer" }}
-          className="cursor-pointer"
-          color="orange"
-          onClick={handleLightMood}
-          size={30}
-        />
+        <></>
       )}
       {loggedIn ? (
-        <Link className="p-4" href={"/"}>
-          Sign Out
-        </Link>
+        <Button
+          type="primary"
+          onClick={handleLogout}
+          className="bg-brand-color text-white hover:!bg-brand-color mr-4"
+        >
+          Logout
+        </Button>
       ) : (
-        <Link className="p-4" href={"/signin"}>
-          SignIn
-        </Link>
+        <></>
       )}
     </div>
   );

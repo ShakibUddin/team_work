@@ -1,6 +1,5 @@
 import { Input } from "antd";
 import error from "next/error";
-import { title } from "process";
 import React from "react";
 
 type Props = {
@@ -9,6 +8,7 @@ type Props = {
   placeholder: string;
   required?: boolean;
   className?: string;
+  value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean;
@@ -25,6 +25,7 @@ const InputField = (props: Props) => {
       {props.type === "password" ? (
         <Input.Password
           type={props.type}
+          value={props.value}
           required={props.required}
           placeholder={props.placeholder}
           className={props.className}
