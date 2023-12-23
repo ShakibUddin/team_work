@@ -3,6 +3,10 @@ import { AuthState, ILOGIN_RESPONSE } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { notification } from "antd";
 import React, { useEffect, useRef } from "react";
+import DataCard from "../../component/dashboard/dataCard";
+import { FaUsers, FaTasks } from "react-icons/fa";
+import { MdOutlineRocketLaunch } from "react-icons/md";
+import { AiFillProject } from "react-icons/ai";
 
 const Dashboard = () => {
   const [api, contextHolder] = notification.useNotification();
@@ -37,7 +41,32 @@ const Dashboard = () => {
   return (
     <div>
       {contextHolder}
-      Dashboard
+      <div className="flex w-full flex-wrap gap-4 mt-4">
+        <DataCard
+          title={"Projects"}
+          icon={<AiFillProject size={30} className="text-cyan-600" />}
+          data={5}
+          iconBgColor={"bg-cyan-50"}
+        />
+        <DataCard
+          title={"Tasks"}
+          icon={<FaTasks size={30} className="text-yellow-600" />}
+          data={234}
+          iconBgColor={"bg-yellow-50"}
+        />
+        <DataCard
+          title={"Members"}
+          icon={<FaUsers size={30} className="text-purple-600" />}
+          data={5}
+          iconBgColor={"bg-purple-50"}
+        />
+        <DataCard
+          title={"Total Build for today"}
+          icon={<MdOutlineRocketLaunch size={30} className="text-pink-600" />}
+          data={3}
+          iconBgColor={"bg-pink-50"}
+        />
+      </div>
     </div>
   );
 };

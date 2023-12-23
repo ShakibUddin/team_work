@@ -1,5 +1,4 @@
 import { Input } from "antd";
-import error from "next/error";
 import React from "react";
 
 type Props = {
@@ -47,7 +46,9 @@ const InputField = (props: Props) => {
           disabled={props.disabled}
         />
       )}
-      <span className="error-message">{error ? props.errorMessage : ""}</span>
+      <span className="error-message">
+        {props.error ? props.errorMessage : ""}
+      </span>
     </div>
   );
 };

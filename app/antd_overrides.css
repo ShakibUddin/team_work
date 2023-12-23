@@ -1,0 +1,7 @@
+.ant-layout-sider, .ant-layout-sider-dark, .ant-layout-sider-trigger{
+    @apply !bg-[var(--brand-color)]
+}
+
+.ant-menu{
+    @apply bg-[var(--brand-color)] h-screen;
+}

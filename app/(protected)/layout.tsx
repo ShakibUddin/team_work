@@ -5,6 +5,9 @@ import useAuthStore from "@/store/authStore/useAuthStore";
 import { useRouter } from "next/navigation";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import Header from "../component/shared/header";
+import { Layout as AntLayout } from "antd";
+
+const { Content } = AntLayout;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
@@ -19,15 +22,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [loggedIn]);
 
   return (
-    <div className="flex h-screen md:overflow-hidden">
-      <div className="w-fit flex-none">
-        <Sidebar />
-      </div>
-      <div>
+    <AntLayout className="flex h-screen md:overflow-hidden">
+      <Sidebar />
+      <AntLayout>
         <Header />
-        <div className="grow p-6 md:overflow-y-auto md:p-12">{children}</div>
-      </div>
-    </div>
+        <Content className="overflow-hidden overflow-y-auto p-4">
+          {children}
+        </Content>
+      </AntLayout>
+    </AntLayout>
   );
 };
 

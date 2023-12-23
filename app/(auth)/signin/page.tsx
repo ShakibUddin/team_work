@@ -104,7 +104,7 @@ const Signin = () => {
           type={"password"}
           placeholder="Password"
           onChange={formik.handleChange("password")}
-          onBlur={formik.handleBlur("email")}
+          onBlur={formik.handleBlur("password")}
           iconRender={(visible) =>
             visible ? <AiFillEyeInvisible size={20} /> : <AiFillEye size={20} />
           }

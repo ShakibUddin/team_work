@@ -4,7 +4,6 @@ import useAuthStore from "@/store/authStore/useAuthStore";
 import { Button } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
-
 type Props = {};
 
 const Header = (props: Props) => {
@@ -18,9 +17,9 @@ const Header = (props: Props) => {
   };
 
   return (
-    <div className="header">
+    <div className="header ">
       {loggedIn ? (
-        <p className="mr-4 !text-blue-400">Hello, {loggedInUser?.firstName}</p>
+        <p className="mr-4  !text-blue-400">Hello, {loggedInUser?.firstName}</p>
       ) : (
         <></>
       )}
