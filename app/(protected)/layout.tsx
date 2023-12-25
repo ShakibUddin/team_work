@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../component/shared/sidebar";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,10 @@ const { Content } = AntLayout;
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
   const router = useRouter();
-
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   useEffect(() => {
     if (!loggedIn) {
       router.replace("/signin");
@@ -21,17 +24,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [loggedIn]);
 
-  return (
-    <AntLayout className="flex h-screen md:overflow-hidden">
-      <Sidebar />
-      <AntLayout>
-        <Header />
-        <Content className="overflow-hidden overflow-y-auto p-4">
-          {children}
-        </Content>
+  if (isClient) {
+    return (
+      <AntLayout className="flex h-screen md:overflow-hidden">
+        <Sidebar />
+        <AntLayout>
+          <Header />
+          <Content className="h-[calc(100vh-103px)] overflow-hidden overflow-y-auto p-4">
+            {children}
+          </Content>
+        </AntLayout>
       </AntLayout>
-    </AntLayout>
-  );
+    );
+  }
+  return <div></div>;
 };
 
 export default Layout;

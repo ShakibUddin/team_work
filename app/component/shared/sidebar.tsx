@@ -6,9 +6,8 @@ import type { MenuProps } from "antd";
 import { Button, Menu, Layout } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { MdDashboard } from "react-icons/md";
-import { AiFillProject } from "react-icons/ai";
+import { AiFillProject, AiOutlineSchedule } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa6";
-import { AiOutlineSchedule } from "react-icons/ai";
 
 const { Sider } = Layout;
 
@@ -60,20 +59,18 @@ const Sidebar = (props: Props) => {
     setCollapsed(!collapsed);
   };
   return (
-    <Sider collapsed={collapsed}>
-      <p className="heading2 text-center my-4">Team Work</p>
+    <Sider className="h-screen" collapsed={collapsed}>
+      <p className="heading3 my-4 text-center text-white">Team Work</p>
       <Menu
         defaultSelectedKeys={["/dashboard"]}
         mode="inline"
         theme="dark"
-        inlineCollapsed={collapsed}
         items={items}
       />
       <Button
         type="primary"
         onClick={toggleCollapsed}
         style={{
-          marginBottom: 16,
           position: "absolute",
           bottom: "0px",
           left: "0px",
