@@ -6,7 +6,8 @@ import { AuthState } from '@/store/authStore/authStoreTypes';
 interface ApiRequestConfig {
     method: Method;
     path: string;
-    token: string;
+    params?: object;
+    token?: string;
     data?: any;
 }
 
@@ -14,7 +15,7 @@ export const useApiRequest = () => {
     const { setLoggedIn, setLoggedInUser } = useAuthStore((state: AuthState) => state);
 
     const apiRequest = async (config: ApiRequestConfig) => {
-        const { method, path, data, token } = config;
+        const { method, path, data, token, params } = config;
 
         // Default headers
         const headers = {
@@ -28,6 +29,7 @@ export const useApiRequest = () => {
                 url: BASE_URL + path,
                 data,
                 headers,
+                params
             });
             return response.data;
         } catch (error: any) {

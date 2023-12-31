@@ -1,21 +1,20 @@
+"use client";
+import { IProject } from "@/app/(protected)/projects/types";
+import { useRouter } from "next/navigation";
 import React from "react";
 
-type Developer = {
-  name: string;
-  avatar?: string;
-};
-type Props = {
-  title: string;
-  description: string;
-  taskCount: string;
-  status: string;
-  statusColor: string;
-  developers?: Developer[];
-};
+const ProjectCard = (props: IProject) => {
+  const router = useRouter();
 
-const ProjectCard = (props: Props) => {
+  const handleNavigation = () => {
+    router.push(`/projects/${props.id}`);
+  };
+
   return (
-    <div className="flex h-auto w-[200px] flex-col items-center justify-start gap-4 border-[1px] shadow-md">
+    <div
+      onClick={handleNavigation}
+      className="flex h-auto w-[200px] flex-col items-center justify-start gap-4 border-[1px] shadow-md cursor-pointer hover:shadow-lg"
+    >
       <p className="text-xl font-bold text-brand-color">{props.title}</p>
       <p className="text-sm font-bold text-brand-color">
         {props.taskCount} Tasks
@@ -23,7 +22,7 @@ const ProjectCard = (props: Props) => {
       <p className="text-md font-light text-black ">{props.description}</p>
       <div className="flex justify-between">
         <p
-          className={`text-[${props.statusColor}] rounded-full p-2 my-2 bg-[${props.statusColor}] bg-opacity-10`}
+          className={`rounded-full p-2 my-2 text-[${props.statusColor}] bg-[${props.statusColor}] bg-opacity-10`}
         >
           {props.status}
         </p>

@@ -4,5 +4,9 @@ export const PATHS = {
     SIGNUP: "user/register",
     SIGNIN: "user/login",
     ALL_PROJECTS: "project/all",
-    PROJECT_STATUS: "project/status/all"
+    PROJECTS_BY_OWNER: "project/details",
+    PROJECT_STATUS: "project/status/all",
+    TASK_STATUS: "task/status/all",
+    LOGOUT: "user/logout",
+    TASKS_IN_A_PROJECT: "task/details"
 };

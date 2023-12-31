@@ -20,9 +20,10 @@ const Projects = (props: Props) => {
 
   const fetchAllProjects = (token: string) => {
     apiRequest({
-      path: PATHS.ALL_PROJECTS,
+      path: PATHS.PROJECTS_BY_OWNER,
       method: "GET",
       token,
+      params: { ownerId: loggedInUser?.id },
     }).then((response: AxiosResponse) => {
       setProjects(response?.data);
     });
@@ -51,12 +52,13 @@ const Projects = (props: Props) => {
         )[0];
         return (
           <ProjectCard
+            id={project.id}
             key={index}
             title={project.title}
             description={project.description}
             taskCount={project.taskCount}
-            status={statusOfThisProject.title}
-            statusColor={statusOfThisProject.color}
+            status={statusOfThisProject?.title}
+            statusColor={statusOfThisProject?.color}
           />
         );
       })}

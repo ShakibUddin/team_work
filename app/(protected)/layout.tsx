@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../component/shared/sidebar";
 import useAuthStore from "@/store/authStore/useAuthStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import Header from "../component/shared/header";
 import { Layout as AntLayout } from "antd";
@@ -13,6 +13,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+  const pathname = usePathname();
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -20,7 +22,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     if (!loggedIn) {
       router.replace("/signin");
     } else {
-      router.replace("/dashboard");
+      router.replace(pathname);
     }
   }, [loggedIn]);
 

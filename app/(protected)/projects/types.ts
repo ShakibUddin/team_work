@@ -1,3 +1,9 @@
+export interface IDeveloper {
+    id: number;
+    name: string;
+    avatar?: string;
+}
+
 export interface IProject {
     id: number,
     title: string,
@@ -9,6 +15,18 @@ export interface IProject {
     updatedAt: string
 }
 
+export interface ITask {
+    id: number;
+    title: string;
+    description: string;
+    projectId: string;
+    status: string;
+    statusColor?: string;
+    assignedDevs?: IDeveloper[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
 export interface IProjectStatus {
     id: number,
     title: string,
@@ -16,3 +34,5 @@ export interface IProjectStatus {
     createdAt: string,
     updatedAt: string
 }
+
+export interface ITaskStatus extends IProjectStatus { }

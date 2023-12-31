@@ -1,7 +1,10 @@
 "use client";
+import { PATHS } from "@/app/utils/apiConstants";
+import { useApiRequest } from "@/app/utils/apiService";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { Button } from "antd";
+import { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
 type Props = {};
@@ -10,10 +13,17 @@ const Header = (props: Props) => {
   const { loggedIn, loggedInUser } = useAuthStore((state: AuthState) => state);
   const setLoggedIn = useAuthStore((state: AuthState) => state.setLoggedIn);
   const router = useRouter();
+  const apiRequest = useApiRequest();
 
   const handleLogout = () => {
-    setLoggedIn(false);
-    router.push("/signin");
+    apiRequest({
+      path: PATHS.LOGOUT,
+      method: "GET",
+      params: { id: loggedInUser?.id },
+    }).then((response: AxiosResponse) => {
+      setLoggedIn(false);
+      router.push("/signin");
+    });
   };
 
   return (
