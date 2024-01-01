@@ -14,7 +14,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
-
   useEffect(() => {
     setIsClient(true);
   }, []);

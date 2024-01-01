@@ -20,6 +20,7 @@ export interface ITask {
     title: string;
     description: string;
     projectId: string;
+    statusId: number;
     status: string;
     statusColor?: string;
     assignedDevs?: IDeveloper[];
@@ -35,4 +36,7 @@ export interface IProjectStatus {
     updatedAt: string
 }
 
+export interface ITaskByStatus {
+    [key: number]: ITask[];
+}
 export interface ITaskStatus extends IProjectStatus { }

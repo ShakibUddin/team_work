@@ -4,15 +4,10 @@ import React from "react";
 
 const TaskCard = (props: ITask) => {
   return (
-    <div className="flex h-auto w-[200px] flex-col items-center justify-start gap-4 border-[1px] shadow-md cursor-pointer hover:shadow-lg">
+    <div className="flex h-auto min-w-[200px] flex-col items-start justify-start gap-4 border-[1px] shadow-md cursor-pointer hover:shadow-lg p-4 rounded-md">
       <p className="text-xl font-bold text-brand-color">{props.title}</p>
       <p className="text-xs font-light text-black ">{props.description}</p>
       <div className="flex justify-between">
-        <p
-          className={`rounded-full p-2 my-2 text-[${props.statusColor}] bg-[${props.statusColor}] bg-opacity-10`}
-        >
-          {props.status}
-        </p>
         {props.assignedDevs &&
           props.assignedDevs.map((dev: IDeveloper) => (
             <div className="rounded-full" key={dev.id}>
