@@ -1,6 +1,7 @@
 export interface IDeveloper {
     id: number;
-    name: string;
+    firstName: string;
+    lastName: string;
     avatar?: string;
 }
 
@@ -23,7 +24,7 @@ export interface ITask {
     statusId: number;
     status: string;
     statusColor?: string;
-    assignedDevs?: IDeveloper[];
+    developers?: string;
     createdAt?: string;
     updatedAt?: string;
 }

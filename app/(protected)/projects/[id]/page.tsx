@@ -80,7 +80,7 @@ const Page = ({ params }: { params: { id: number } }) => {
         return (
           <div
             key={status.id}
-            className="grow flex flex-col gap-4 p-4 border-2 shadow-md rounded-md h-auto overflow-y-auto"
+            className="grow flex flex-col gap-4 p-4 border-2 shadow-md rounded-md h-[calc(100vh-120px)] overflow-y-auto"
           >
             <p
               className={`text-lg font-bold uppercase text-center text-${status.color}`}
@@ -98,6 +98,7 @@ const Page = ({ params }: { params: { id: number } }) => {
                   status={status?.title}
                   statusId={status?.id}
                   statusColor={status?.color}
+                  developers={task.developers}
                 />
               );
             })}
