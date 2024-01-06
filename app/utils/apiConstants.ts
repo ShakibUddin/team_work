@@ -8,5 +8,6 @@ export const PATHS = {
     PROJECT_STATUS: "project/status/all",
     TASK_STATUS: "task/status/all",
     LOGOUT: "user/logout",
-    TASKS_IN_A_PROJECT: "task/all"
+    TASKS_IN_A_PROJECT: "task/all",
+    ALL_USERS: "user/all/users",
 };

@@ -7,7 +7,7 @@ type Props = {
   placeholder: string;
   required?: boolean;
   className?: string;
-  value: string;
+  value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean;

@@ -17,16 +17,16 @@ export interface IProject {
 }
 
 export interface ITask {
-    id: number;
-    title: string;
-    description: string;
-    projectId: string;
-    statusId: number;
-    status: string;
-    statusColor?: string;
-    developers?: string;
-    createdAt?: string;
-    updatedAt?: string;
+    id: number | undefined;
+    title: string | undefined;
+    description: string | undefined;
+    projectId: number | undefined;
+    statusId: number | undefined;
+    status?: string | undefined;
+    statusColor?: string | undefined;
+    developers?: string | undefined;
+    createdAt?: string | undefined;
+    updatedAt?: string | undefined;
 }
 
 export interface IProjectStatus {

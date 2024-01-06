@@ -51,3 +51,11 @@ body {
 .page{
   @apply flex flex-col h-[calc(h-screen-180px)] overflow-hidden overflow-y-auto
 }
+
+.action-button-active{
+  @apply bg-brand-color border-2 border-brand-color text-white rounded-md hover:shadow-xl
+}
+
+.action-button-cancel{
+  @apply border-brand-color bg-white border-2 text-brand-color rounded-md hover:shadow-xl
+}
