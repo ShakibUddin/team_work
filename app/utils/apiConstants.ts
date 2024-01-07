@@ -10,4 +10,5 @@ export const PATHS = {
     LOGOUT: "user/logout",
     TASKS_IN_A_PROJECT: "task/all",
     ALL_USERS: "user/all/users",
+    CREATE_TASK: "task/create",
 };

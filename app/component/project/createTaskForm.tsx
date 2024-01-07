@@ -21,8 +21,9 @@ import AutoCompleteField from "../shared/autoComplete";
 
 type Props = {
   handleClose: () => void;
-  projectId: number;
+  projectId: string;
   taskStatusId: number | undefined;
+  handleReload: () => void;
 };
 
 const CreateTaskForm = (props: Props) => {
@@ -70,15 +71,26 @@ const CreateTaskForm = (props: Props) => {
     id: undefined,
     title: undefined,
     description: undefined,
-    projectId: props.projectId || undefined,
+    projectId: parseInt(props.projectId) || undefined,
     statusId: props.taskStatusId || undefined,
     developers: undefined,
   };
 
-  console.log(typeof initialValues?.projectId);
-  console.log(typeof props.projectId);
   const createTask = (values: any) => {
-    console.log("values", values);
+    apiRequest({
+      path: PATHS.CREATE_TASK,
+      method: "POST",
+      token: loggedInUser?.token,
+      data: JSON.stringify({
+        ...values,
+        developers: JSON.parse(values.developers),
+      }),
+    }).then((response: any) => {
+      if (!response?.error) {
+        props.handleReload();
+        props.handleClose();
+      }
+    });
   };
 
   const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
@@ -138,6 +150,7 @@ const CreateTaskForm = (props: Props) => {
           onChange={(value) => {
             formik.setFieldValue("projectId", value);
           }}
+          disabled={!!props.projectId}
           onBlur={formik.handleBlur("projectId")}
           error={!!(formik.errors.projectId && formik.touched.projectId)}
           errorMessage={formik.errors.projectId}
@@ -155,6 +168,7 @@ const CreateTaskForm = (props: Props) => {
           onChange={(value) => {
             formik.setFieldValue("statusId", value);
           }}
+          disabled={!!props.taskStatusId}
           onBlur={formik.handleBlur("statusId")}
           error={!!(formik.errors.statusId && formik.touched.statusId)}
           errorMessage={formik.errors.statusId}

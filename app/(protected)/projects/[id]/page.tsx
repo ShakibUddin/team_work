@@ -18,6 +18,7 @@ const Page = ({ params }: { params: { id: number } }) => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
   const [openTaskCreatingModal, setOpenTaskCreationModal] = useState(false);
+  const [reload, setReload] = useState(false);
   const [selectedTaskStatusId, setSelectedTaskStatusId] = useState<number>();
   const apiRequest = useApiRequest();
 
@@ -38,6 +39,10 @@ const Page = ({ params }: { params: { id: number } }) => {
         setTaskStatus(response?.data);
       }
     );
+  };
+
+  const handleReload = () => {
+    setReload(true);
   };
 
   useEffect(() => {
@@ -68,6 +73,12 @@ const Page = ({ params }: { params: { id: number } }) => {
     setOpenTaskCreationModal(false);
   };
 
+  useEffect(() => {
+    if (reload && loggedInUser?.token) {
+      fetchTasksByProjectId(loggedInUser?.token);
+      setReload(false);
+    }
+  }, [reload, loggedInUser]);
   return (
     <div className="flex gap-4">
       {taskStatus.map((status: ITaskStatus) => {
@@ -120,8 +131,9 @@ const Page = ({ params }: { params: { id: number } }) => {
       >
         <CreateTaskForm
           handleClose={handleCloseCreateTaskModal}
-          projectId={params?.id}
+          projectId={String(params?.id)}
           taskStatusId={selectedTaskStatusId}
+          handleReload={handleReload}
         />
       </Modal>
     </div>
