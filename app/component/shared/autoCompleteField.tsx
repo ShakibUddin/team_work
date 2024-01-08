@@ -13,6 +13,7 @@ type Props = {
   required?: boolean;
   className?: string;
   popupClassName?: string;
+  value?: string;
   popupMatchSelectWidth?: number;
   options: SelectOption[];
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -29,7 +30,7 @@ type Props = {
 const AutoCompleteField = (props: Props) => {
   return (
     <div>
-      <span className="input-title">{props.title}</span>
+      <p className="input-title">{props.title}</p>
       <AutoComplete
         popupClassName={props.popupClassName}
         popupMatchSelectWidth={props.popupMatchSelectWidth}
@@ -38,6 +39,7 @@ const AutoCompleteField = (props: Props) => {
         onChange={props.onChange}
         onSelect={props.onSelect}
         size={props.size}
+        value={props.value}
       >
         <Input.Search size={props.size} placeholder={props.placeholder} />
       </AutoComplete>

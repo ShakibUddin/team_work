@@ -17,7 +17,7 @@ import * as yup from "yup";
 import SelectField from "../shared/selectField";
 import TextAreaField from "../shared/textAreaField";
 import { Button } from "antd";
-import AutoCompleteField from "../shared/autoComplete";
+import AutoCompleteField from "../shared/autoCompleteField";
 
 type Props = {
   handleClose: () => void;
@@ -32,6 +32,7 @@ const CreateTaskForm = (props: Props) => {
   const [projects, setProjects] = useState<IProject[]>([]);
   const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
   const [users, setUsers] = useState<IDeveloper[]>([]);
+  const [developerName, setDeveloperName] = useState("");
 
   const fetchAllProjects = (token: string) => {
     apiRequest({
@@ -52,12 +53,15 @@ const CreateTaskForm = (props: Props) => {
     );
   };
 
-  const fetchAllUsers = (token: string) => {
-    apiRequest({ path: PATHS.ALL_USERS, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setUsers(response?.data);
-      }
-    );
+  const fetchAllUsers = (token: string, searchKey?: string) => {
+    apiRequest({
+      path: PATHS.ALL_USERS,
+      method: "GET",
+      token,
+      params: { searchKey },
+    }).then((response: AxiosResponse) => {
+      setUsers(response?.data);
+    });
   };
 
   const validationSchema = yup.object({
@@ -87,6 +91,7 @@ const CreateTaskForm = (props: Props) => {
       }),
     }).then((response: any) => {
       if (!response?.error) {
+        formik.resetForm();
         props.handleReload();
         props.handleClose();
       }
@@ -177,7 +182,11 @@ const CreateTaskForm = (props: Props) => {
       <AutoCompleteField
         title="Developers"
         popupMatchSelectWidth={500}
-        onChange={(value) => {}}
+        value={developerName}
+        onChange={(value) => {
+          setDeveloperName(String(value));
+          fetchAllUsers(loggedInUser?.token || "", String(value));
+        }}
         onSelect={(value: string | number, option: any) => {
           if (formik.values.developers) {
             if (
@@ -199,6 +208,7 @@ const CreateTaskForm = (props: Props) => {
               JSON.stringify([option.developer])
             );
           }
+          setDeveloperName("");
         }}
         options={users.map((user: IDeveloper) => ({
           label: user.firstName + " " + user.lastName,
@@ -224,7 +234,13 @@ const CreateTaskForm = (props: Props) => {
         <Button className="action-button-active" onClick={handleSubmit}>
           Create Task
         </Button>
-        <Button className="action-button-cancel" onClick={props.handleClose}>
+        <Button
+          className="action-button-cancel"
+          onClick={() => {
+            formik.resetForm();
+            props.handleClose();
+          }}
+        >
           Cancel
         </Button>
       </div>
