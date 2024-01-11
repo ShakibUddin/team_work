@@ -68,13 +68,13 @@ const CreateTaskForm = (props: Props) => {
     title: yup
       .string()
       .required("Title is required.")
-      .min(10, "Description must be at least 10 characters long.")
-      .max(100, "Description must be no more than 100 characters long."),
+      .min(10, "Title must be at least 10 characters long.")
+      .max(100, "Title must be no more than 100 characters long."),
     description: yup
       .string()
       .required("Description is required.")
       .min(10, "Description must be at least 10 characters long.")
-      .max(1000, "Description must be no more than 100 characters long."),
+      .max(1000, "Description must be no more than 1000 characters long."),
     projectId: yup.number().required("Project is required."),
     statusId: yup.string().required("Status is required"),
   });
@@ -227,7 +227,7 @@ const CreateTaskForm = (props: Props) => {
         }))}
         size="large"
       />
-      <div className="flex gap-4 justify-start">
+      <div className="flex gap-4 justify-start flex-wrap">
         {formik.values.developers &&
           JSON.parse(formik.values.developers).map((developer: IDeveloper) => {
             return (
