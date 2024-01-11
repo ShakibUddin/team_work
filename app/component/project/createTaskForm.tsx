@@ -65,19 +65,27 @@ const CreateTaskForm = (props: Props) => {
   };
 
   const validationSchema = yup.object({
-    title: yup.string().required("Title is required."),
-    description: yup.string().required("Description is required."),
+    title: yup
+      .string()
+      .required("Title is required.")
+      .min(10, "Description must be at least 10 characters long.")
+      .max(100, "Description must be no more than 100 characters long."),
+    description: yup
+      .string()
+      .required("Description is required.")
+      .min(10, "Description must be at least 10 characters long.")
+      .max(1000, "Description must be no more than 100 characters long."),
     projectId: yup.number().required("Project is required."),
     statusId: yup.string().required("Status is required"),
   });
 
   const initialValues: ITask = {
     id: undefined,
-    title: undefined,
-    description: undefined,
+    title: "",
+    description: "",
     projectId: parseInt(props.projectId) || undefined,
     statusId: props.taskStatusId || undefined,
-    developers: undefined,
+    developers: "",
   };
 
   const createTask = (values: any) => {
@@ -92,6 +100,7 @@ const CreateTaskForm = (props: Props) => {
     }).then((response: any) => {
       if (!response?.error) {
         formik.resetForm();
+        setDeveloperName("");
         props.handleReload();
         props.handleClose();
       }
@@ -104,6 +113,7 @@ const CreateTaskForm = (props: Props) => {
   };
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues,
     validationSchema,
     onSubmit: createTask,
@@ -238,6 +248,7 @@ const CreateTaskForm = (props: Props) => {
           className="action-button-cancel"
           onClick={() => {
             formik.resetForm();
+            setDeveloperName("");
             props.handleClose();
           }}
         >
