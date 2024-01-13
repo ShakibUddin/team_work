@@ -1,11 +1,16 @@
 import { IDeveloper, ITask } from "@/app/(protected)/projects/types";
-import Image from "next/image";
 import React from "react";
 import { Avatar, Tooltip } from "antd";
 
-const TaskCard = (props: ITask) => {
+interface ITaskCard extends ITask {
+  onClick: () => void;
+}
+const TaskCard = (props: ITaskCard) => {
   return (
-    <div className="flex h-auto min-w-[200px] flex-col items-start justify-start gap-4 border-[1px] shadow-md cursor-pointer hover:shadow-lg p-4 rounded-md">
+    <div
+      className="flex h-auto min-w-[200px] flex-col items-start justify-start gap-4 border-[1px] shadow-md cursor-pointer hover:shadow-lg p-4 rounded-md"
+      onClick={props.onClick}
+    >
       <p className="text-xl font-bold text-brand-color">{props.title}</p>
       <p className="text-xs font-light text-black ">{props.description}</p>
       <div className="flex justify-start items-center">

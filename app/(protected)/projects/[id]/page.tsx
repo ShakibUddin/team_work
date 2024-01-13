@@ -16,8 +16,10 @@ import CreateTaskForm from "@/app/component/project/createTaskForm";
 const Page = ({ params }: { params: { id: number } }) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const [selectedTask, setSelectedTask] = useState<ITask>();
   const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
   const [openTaskCreatingModal, setOpenTaskCreationModal] = useState(false);
+  const [updateTask, setUpdateTask] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedTaskStatusId, setSelectedTaskStatusId] = useState<number>();
   const apiRequest = useApiRequest();
@@ -73,6 +75,12 @@ const Page = ({ params }: { params: { id: number } }) => {
     setOpenTaskCreationModal(false);
   };
 
+  const handleOpenTaskForm = (task: ITask) => {
+    setOpenTaskCreationModal(true);
+    setUpdateTask(true);
+    setSelectedTask(task);
+  };
+
   useEffect(() => {
     if (reload && loggedInUser?.token) {
       fetchTasksByProjectId(loggedInUser?.token);
@@ -115,6 +123,9 @@ const Page = ({ params }: { params: { id: number } }) => {
                   statusId={status?.id}
                   statusColor={status?.color}
                   developers={task.developers}
+                  onClick={() => {
+                    handleOpenTaskForm(task);
+                  }}
                 />
               );
             })}
@@ -130,6 +141,8 @@ const Page = ({ params }: { params: { id: number } }) => {
         centered
       >
         <CreateTaskForm
+          update={updateTask}
+          task={selectedTask}
           handleClose={handleCloseCreateTaskModal}
           projectId={String(params?.id)}
           taskStatusId={selectedTaskStatusId}

@@ -48,7 +48,7 @@ const Projects = (props: Props) => {
     <div className="flex gap-4 flex-wrap">
       {projects.map((project: IProject, index: number) => {
         const statusOfThisProject = projectStatus.filter(
-          (status) => status.id === project.status
+          (status) => status.title === project.status
         )[0];
         return (
           <ProjectCard

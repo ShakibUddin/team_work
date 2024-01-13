@@ -24,6 +24,8 @@ type Props = {
   projectId: string;
   taskStatusId: number | undefined;
   handleReload: () => void;
+  update: boolean;
+  task: ITask | undefined;
 };
 
 const CreateTaskForm = (props: Props) => {
@@ -33,7 +35,6 @@ const CreateTaskForm = (props: Props) => {
   const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
   const [users, setUsers] = useState<IDeveloper[]>([]);
   const [developerName, setDeveloperName] = useState("");
-
   const fetchAllProjects = (token: string) => {
     apiRequest({
       path: PATHS.PROJECTS_BY_OWNER,
@@ -80,18 +81,20 @@ const CreateTaskForm = (props: Props) => {
   });
 
   const initialValues: ITask = {
-    id: undefined,
-    title: "",
-    description: "",
-    projectId: parseInt(props.projectId) || undefined,
-    statusId: props.taskStatusId || undefined,
-    developers: "",
+    id: props.task?.id || undefined,
+    title: props.task?.title || "",
+    description: props.task?.description || "",
+    projectId: props.task?.projectId || parseInt(props.projectId) || undefined,
+    statusId: props.task?.statusId || props.taskStatusId || undefined,
+    developers: props.task?.developers || "",
   };
 
   const createTask = (values: any) => {
     apiRequest({
-      path: PATHS.CREATE_TASK,
-      method: "POST",
+      path: props.update
+        ? PATHS.UPDATE_TASK + "/id=" + props.task?.id
+        : PATHS.CREATE_TASK,
+      method: props.update ? "PUT" : "POST",
       token: loggedInUser?.token,
       data: JSON.stringify({
         ...values,
@@ -118,7 +121,6 @@ const CreateTaskForm = (props: Props) => {
     validationSchema,
     onSubmit: createTask,
   });
-
   useEffect(() => {
     if (loggedInUser?.token) {
       fetchAllProjects(loggedInUser.token);
@@ -242,7 +244,7 @@ const CreateTaskForm = (props: Props) => {
       </div>
       <div className="flex gap-4 ml-auto my-4 w-fit">
         <Button className="action-button-active" onClick={handleSubmit}>
-          Create Task
+          {props.update ? "Update Task" : "Create Task"}
         </Button>
         <Button
           className="action-button-cancel"

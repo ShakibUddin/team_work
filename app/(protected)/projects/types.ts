@@ -9,11 +9,11 @@ export interface IProject {
     id: number,
     title: string,
     description: string,
-    status: number,
+    status: string,
     statusColor: string,
     taskCount: string,
-    createdAt: string,
-    updatedAt: string
+    createdAt?: string,
+    updatedAt?: string
 }
 
 export interface ITask {
