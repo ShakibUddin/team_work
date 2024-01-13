@@ -25,7 +25,7 @@ body {
 }
 
 .header {
-  @apply shadow-md w-[calc(100vw-200px)] h-16 flex justify-end items-center;
+  @apply shadow-md min-w-[calc(100vw-200px)] h-16 flex justify-end items-center;
 }
 
 .heading1 {

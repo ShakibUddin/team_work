@@ -16,7 +16,7 @@ import CreateTaskForm from "@/app/component/project/createTaskForm";
 const Page = ({ params }: { params: { id: number } }) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
   const [tasks, setTasks] = useState<ITask[]>([]);
-  const [selectedTask, setSelectedTask] = useState<ITask>();
+  const [selectedTask, setSelectedTask] = useState<ITask | undefined>();
   const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
   const [openTaskCreatingModal, setOpenTaskCreationModal] = useState(false);
   const [updateTask, setUpdateTask] = useState(false);
@@ -73,6 +73,8 @@ const Page = ({ params }: { params: { id: number } }) => {
 
   const handleCloseCreateTaskModal = () => {
     setOpenTaskCreationModal(false);
+    setUpdateTask(false);
+    setSelectedTask(undefined);
   };
 
   const handleOpenTaskForm = (task: ITask) => {
@@ -87,6 +89,7 @@ const Page = ({ params }: { params: { id: number } }) => {
       setReload(false);
     }
   }, [reload, loggedInUser]);
+
   return (
     <div className="flex gap-4">
       {taskStatus.map((status: ITaskStatus) => {
@@ -133,7 +136,7 @@ const Page = ({ params }: { params: { id: number } }) => {
         );
       })}
       <Modal
-        title="Create Task"
+        title={updateTask ? "Update Task" : "Create Task"}
         open={openTaskCreatingModal}
         footer={null}
         width={800}

@@ -204,7 +204,7 @@ const CreateTaskForm = (props: Props) => {
           onChange={(value) => {
             formik.setFieldValue("statusId", value);
           }}
-          disabled={!!props.taskStatusId}
+          disabled={!!props.taskStatusId && !props.update}
           onBlur={formik.handleBlur("statusId")}
           error={!!(formik.errors.statusId && formik.touched.statusId)}
           errorMessage={formik.errors.statusId}
