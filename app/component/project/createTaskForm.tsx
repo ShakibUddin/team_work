@@ -18,6 +18,7 @@ import SelectField from "../shared/selectField";
 import TextAreaField from "../shared/textAreaField";
 import { Button } from "antd";
 import AutoCompleteField from "../shared/autoCompleteField";
+import DevCard from "./devCard";
 
 type Props = {
   handleClose: () => void;
@@ -92,13 +93,15 @@ const CreateTaskForm = (props: Props) => {
   const createTask = (values: any) => {
     apiRequest({
       path: props.update
-        ? PATHS.UPDATE_TASK + "/id=" + props.task?.id
+        ? PATHS.UPDATE_TASK + "?id=" + props.task?.id
         : PATHS.CREATE_TASK,
       method: props.update ? "PUT" : "POST",
       token: loggedInUser?.token,
       data: JSON.stringify({
         ...values,
-        developers: JSON.parse(values.developers),
+        developers: props.update
+          ? values.developers
+          : JSON.parse(values.developers),
       }),
     }).then((response: any) => {
       if (!response?.error) {
@@ -121,6 +124,18 @@ const CreateTaskForm = (props: Props) => {
     validationSchema,
     onSubmit: createTask,
   });
+
+  const handleDeleteDev = (id: number) => {
+    formik.setFieldValue(
+      "developers",
+      JSON.stringify(
+        JSON.parse(formik.values.developers || "[]").filter(
+          (dev: IDeveloper) => dev.id !== id
+        )
+      )
+    );
+  };
+
   useEffect(() => {
     if (loggedInUser?.token) {
       fetchAllProjects(loggedInUser.token);
@@ -135,6 +150,8 @@ const CreateTaskForm = (props: Props) => {
         title="Title"
         value={formik.values.title}
         required
+        maxLength={100}
+        showCount
         onChange={formik.handleChange("title")}
         onBlur={formik.handleBlur("title")}
         placeholder="Enter title"
@@ -145,6 +162,8 @@ const CreateTaskForm = (props: Props) => {
         title="Description"
         required
         rows={10}
+        maxLength={1000}
+        showCount
         wrapperStyle={"w-full"}
         value={formik.values.description}
         onChange={formik.handleChange("description")}
@@ -233,12 +252,11 @@ const CreateTaskForm = (props: Props) => {
         {formik.values.developers &&
           JSON.parse(formik.values.developers).map((developer: IDeveloper) => {
             return (
-              <p
-                key={developer.id}
-                className="bg-brand-color rounded-md px-4 py-2 text-white"
-              >
-                {developer.firstName + " " + developer.lastName}
-              </p>
+              <DevCard
+                key={developer?.id}
+                developer={developer}
+                handleDeleteDev={handleDeleteDev}
+              />
             );
           })}
       </div>

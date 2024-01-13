@@ -16,6 +16,8 @@ type Props = {
   rows?: number;
   iconRender?: (visible: boolean) => React.ReactNode;
   readOnly?: boolean;
+  showCount?: boolean;
+  maxLength?: number;
 };
 
 const TextAreaField = (props: Props) => {
@@ -31,6 +33,8 @@ const TextAreaField = (props: Props) => {
         onBlur={props.onBlur}
         rows={props.rows}
         readOnly={props.readOnly}
+        maxLength={props.maxLength}
+        showCount={props.showCount}
         disabled={props.disabled}
       />
       <span className="error-message">

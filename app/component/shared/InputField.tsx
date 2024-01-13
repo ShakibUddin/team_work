@@ -15,6 +15,8 @@ type Props = {
   disabled?: boolean;
   iconRender?: (visible: boolean) => React.ReactNode;
   readOnly?: boolean;
+  showCount?: boolean;
+  maxLength?: number;
 };
 
 const InputField = (props: Props) => {
@@ -24,19 +26,22 @@ const InputField = (props: Props) => {
       {props.type === "password" ? (
         <Input.Password
           type={props.type}
-          value={props.value}
+          value={props.value || ""} // Ensure that the value is not undefined
           required={props.required}
           placeholder={props.placeholder}
           className={props.className}
           onChange={props.onChange}
           onBlur={props.onBlur}
           readOnly={props.readOnly}
+          maxLength={props.maxLength}
+          showCount={props.showCount}
           disabled={props.disabled}
           iconRender={props.iconRender}
         />
       ) : (
         <Input
           type={props.type}
+          value={props.value || ""} // Ensure that the value is not undefined
           required={props.required}
           placeholder={props.placeholder}
           className={props.className}
