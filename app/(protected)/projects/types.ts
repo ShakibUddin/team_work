@@ -9,9 +9,10 @@ export interface IProject {
     id: number,
     title: string,
     description: string,
-    status: string,
-    statusColor: string,
-    taskCount: string,
+    ownerId?: string,
+    status?: string,
+    statusColor?: string,
+    taskCount?: string,
     createdAt?: string,
     updatedAt?: string
 }

@@ -53,9 +53,13 @@ body {
 }
 
 .action-button-active{
-  @apply bg-brand-color border-2 border-brand-color text-white rounded-md hover:shadow-xl
+  @apply bg-brand-color border-2 border-brand-color text-white rounded-md hover:shadow-xl hover:!text-white hover:!border-brand-color
+}
+
+.action-button-outlined{
+  @apply border-brand-color bg-white border-2 text-brand-color rounded-md hover:shadow-xl hover:!text-brand-color hover:!border-brand-color
 }
 
 .action-button-cancel{
-  @apply border-brand-color bg-white border-2 text-brand-color rounded-md hover:shadow-xl
+  @apply border-gray-300 bg-gray-300 border-2 text-slate-600 rounded-md hover:shadow-xl hover:!text-slate-600 hover:!border-gray-300
 }

@@ -87,7 +87,7 @@ const CreateTaskForm = (props: Props) => {
     description: props.task?.description || "",
     projectId: props.task?.projectId || parseInt(props.projectId) || undefined,
     statusId: props.task?.statusId || props.taskStatusId || undefined,
-    developers: props.task?.developers || "",
+    developers: props.task?.developers || "[]",
   };
 
   const createTask = (values: any) => {
