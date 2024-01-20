@@ -7,8 +7,9 @@ import { AuthState } from "@/store/authStore/authStoreTypes";
 import { AxiosResponse } from "axios";
 import { PATHS } from "@/app/utils/apiConstants";
 import { useApiRequest } from "@/app/utils/apiService";
-import { Button, Modal } from "antd";
+import { Breadcrumb, Button, Modal } from "antd";
 import CreateProjectForm from "@/app/component/project/createProjectForm";
+import CustomBreadCrumb from "@/app/component/shared/customBreadcrumb";
 
 type Props = {};
 
@@ -79,6 +80,13 @@ const Projects = (props: Props) => {
 
   return (
     <div className="flex flex-col">
+      <CustomBreadCrumb
+        items={[
+          {
+            title: "Projects",
+          },
+        ]}
+      />
       <Button
         className="ml-auto action-button-active"
         onClick={openCreateProjectForm}
