@@ -21,8 +21,10 @@ export interface ITask {
     id: number | undefined;
     title: string | undefined;
     description: string | undefined;
+    dueDate: string | null;
     projectId: number | undefined;
     statusId: number | undefined;
+    priorityId: number | undefined;
     status?: string | undefined;
     statusColor?: string | undefined;
     developers?: string | undefined;
@@ -42,3 +44,4 @@ export interface ITaskByStatus {
     [key: number]: ITask[];
 }
 export interface ITaskStatus extends IProjectStatus { }
+export interface ITaskPriority extends IProjectStatus { }

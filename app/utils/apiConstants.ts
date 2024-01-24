@@ -7,6 +7,7 @@ export const PATHS = {
     PROJECTS_BY_OWNER: "project/details",
     PROJECT_STATUS: "project/status/all",
     TASK_STATUS: "task/status/all",
+    TAKS_PRIORITY: "task/priorities/all",
     LOGOUT: "user/logout",
     TASKS_IN_A_PROJECT: "task/project",
     ALL_USERS: "user/all/users",

@@ -3,6 +3,7 @@ import {
   IDeveloper,
   IProject,
   ITask,
+  ITaskPriority,
   ITaskStatus,
 } from "@/app/(protected)/projects/types";
 import { PATHS } from "@/app/utils/apiConstants";
@@ -19,6 +20,8 @@ import TextAreaField from "../shared/textAreaField";
 import { Button } from "antd";
 import AutoCompleteField from "../shared/autoCompleteField";
 import DevCard from "./devCard";
+import DatePickerField from "../shared/datePickerField";
+import dayjs from "dayjs";
 
 type Props = {
   handleClose: () => void;
@@ -34,6 +37,7 @@ const CreateTaskForm = (props: Props) => {
   const apiRequest = useApiRequest();
   const [projects, setProjects] = useState<IProject[]>([]);
   const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
+  const [taskPriorities, setTaskPriorities] = useState<ITaskPriority[]>([]);
   const [users, setUsers] = useState<IDeveloper[]>([]);
   const [developerName, setDeveloperName] = useState("");
   const fetchAllProjects = (token: string) => {
@@ -51,6 +55,14 @@ const CreateTaskForm = (props: Props) => {
     apiRequest({ path: PATHS.TASK_STATUS, method: "GET", token }).then(
       (response: AxiosResponse) => {
         setTaskStatus(response?.data);
+      }
+    );
+  };
+
+  const fetchAllTaskPriorities = (token: string) => {
+    apiRequest({ path: PATHS.TAKS_PRIORITY, method: "GET", token }).then(
+      (response: AxiosResponse) => {
+        setTaskPriorities(response?.data);
       }
     );
   };
@@ -79,6 +91,8 @@ const CreateTaskForm = (props: Props) => {
       .max(1000, "Description must be no more than 1000 characters long."),
     projectId: yup.number().required("Project is required."),
     statusId: yup.string().required("Status is required"),
+    dueDate: yup.string().nullable(),
+    priorityId: yup.number(),
   });
 
   const initialValues: ITask = {
@@ -88,6 +102,8 @@ const CreateTaskForm = (props: Props) => {
     projectId: props.task?.projectId || parseInt(props.projectId) || undefined,
     statusId: props.task?.statusId || props.taskStatusId || undefined,
     developers: props.task?.developers || "[]",
+    dueDate: props.task?.dueDate || null,
+    priorityId: props.task?.priorityId || 3,
   };
 
   const createTask = (values: any) => {
@@ -141,6 +157,7 @@ const CreateTaskForm = (props: Props) => {
       fetchAllProjects(loggedInUser.token);
       fetchAllTaskStatus(loggedInUser.token);
       fetchAllUsers(loggedInUser.token);
+      fetchAllTaskPriorities(loggedInUser.token);
     }
   }, [loggedInUser]);
 
@@ -172,12 +189,12 @@ const CreateTaskForm = (props: Props) => {
         error={!!(formik.errors.description && formik.touched.description)}
         errorMessage={formik.errors.description}
       />
-      <div className="flex gap-4 justify-start">
+      <div className="flex gap-4 flex-wrap justify-between">
         <SelectField
           title="Project"
           placeholder="Select project"
           required
-          className="w-64"
+          className="w-36"
           value={formik.values.projectId}
           options={projects.map((project: IProject) => ({
             label: project.title,
@@ -195,7 +212,7 @@ const CreateTaskForm = (props: Props) => {
           title="Status"
           placeholder="Select status"
           required
-          className="w-64"
+          className="w-36"
           value={formik.values.statusId}
           options={taskStatus.map((taskStatus: ITaskStatus) => ({
             label: taskStatus.title,
@@ -209,7 +226,34 @@ const CreateTaskForm = (props: Props) => {
           error={!!(formik.errors.statusId && formik.touched.statusId)}
           errorMessage={formik.errors.statusId}
         />
+        <SelectField
+          title="Priority"
+          placeholder="Select priority"
+          className="w-36"
+          value={formik.values.priorityId}
+          options={taskPriorities.map((taskPriority: ITaskPriority) => ({
+            label: taskPriority.title,
+            value: taskPriority.id,
+          }))}
+          onChange={(value) => {
+            formik.setFieldValue("priorityId", value);
+          }}
+          onBlur={formik.handleBlur("priorityId")}
+        />
+        <DatePickerField
+          title="Due Date"
+          allowClear
+          className="w-36"
+          value={formik.values.dueDate ? dayjs(formik.values.dueDate) : null}
+          onChange={(date) => {
+            formik.setFieldValue("dueDate", date);
+          }}
+          disabledDate={(current) => {
+            return current && current <= dayjs().startOf("day");
+          }}
+        />
       </div>
+
       <AutoCompleteField
         title="Developers"
         popupMatchSelectWidth={500}

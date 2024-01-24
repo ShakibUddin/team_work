@@ -20,6 +20,7 @@ type Props = {
   error?: boolean;
   errorMessage?: string;
   disabled?: boolean;
+  allowClear?: boolean;
 };
 
 const SelectField = (props: Props) => {
@@ -38,6 +39,7 @@ const SelectField = (props: Props) => {
         onChange={props.onChange}
         onBlur={props.onBlur}
         options={props.options}
+        allowClear={props.allowClear}
       />
       <span className="error-message">
         {props.error ? props.errorMessage : ""}

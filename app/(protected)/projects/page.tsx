@@ -93,7 +93,7 @@ const Projects = (props: Props) => {
       >
         Create
       </Button>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 w-full">
         {projects.map((project: IProject, index: number) => {
           const statusOfThisProject = projectStatus.filter(
             (status) => status.title === project.status

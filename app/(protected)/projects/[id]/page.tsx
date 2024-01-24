@@ -109,7 +109,7 @@ const Page = ({ params }: { params: { id: number } }) => {
           return (
             <div
               key={status.id}
-              className="grow flex flex-col max-w-[300px] gap-4 p-4 border-2 shadow-md rounded-md h-[calc(100vh-120px)] overflow-y-auto"
+              className="grow flex flex-col max-w-[500px] gap-4 p-4 border-2 shadow-md rounded-md h-[calc(100vh-120px)] overflow-y-auto"
             >
               <div className="flex items-center justify-between">
                 <span
