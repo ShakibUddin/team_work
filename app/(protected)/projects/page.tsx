@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { IProject, IProjectStatus } from "./types";
+import { IProject, IProjectStatus, ITaskPriority } from "./types";
 import ProjectCard from "@/app/component/project/projectCard";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { AuthState } from "@/store/authStore/authStoreTypes";
@@ -98,7 +98,6 @@ const Projects = (props: Props) => {
           const statusOfThisProject = projectStatus.filter(
             (status) => status.id === project.statusId
           )[0];
-          console.log("statusOfThisProject", statusOfThisProject);
           return (
             <ProjectCard
               id={project.id}

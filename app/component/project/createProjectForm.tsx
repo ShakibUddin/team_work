@@ -24,7 +24,6 @@ const CreateProjectForm = (props: Props) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
   const apiRequest = useApiRequest();
   const [projectStatus, setProjectStatus] = useState<IProjectStatus[]>([]);
-  console.log("props", props);
   const validationSchema = yup.object({
     title: yup
       .string()
@@ -56,7 +55,6 @@ const CreateProjectForm = (props: Props) => {
   };
 
   const createProject = (values: any) => {
-    console.log("values", values);
     const payload = { ...values };
     if (!props.update) {
       delete payload.id;

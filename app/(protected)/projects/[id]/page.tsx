@@ -6,7 +6,7 @@ import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { AxiosResponse } from "axios";
 import React, { useEffect, useMemo, useState } from "react";
-import { ITask, ITaskByStatus, ITaskStatus } from "../types";
+import { ITask, ITaskByStatus, ITaskPriority, ITaskStatus } from "../types";
 import { MdAdd } from "react-icons/md";
 import { Modal } from "antd";
 import CreateTaskForm from "@/app/component/project/createTaskForm";
@@ -24,6 +24,8 @@ const Page = ({ params }: { params: { id: number } }) => {
   const [updateTask, setUpdateTask] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedTaskStatusId, setSelectedTaskStatusId] = useState<number>();
+  const [taskPriorities, setTaskPriorities] = useState<ITaskPriority[]>([]);
+
   const apiRequest = useApiRequest();
 
   const fetchTasksByProjectId = (token: string) => {
@@ -35,6 +37,14 @@ const Page = ({ params }: { params: { id: number } }) => {
     }).then((response: AxiosResponse) => {
       setTasks(response?.data);
     });
+  };
+
+  const fetchAllTaskPriorities = (token: string) => {
+    apiRequest({ path: PATHS.TAKS_PRIORITY, method: "GET", token }).then(
+      (response: AxiosResponse) => {
+        setTaskPriorities(response?.data);
+      }
+    );
   };
 
   const fetchAllTaskStatus = (token: string) => {
@@ -89,6 +99,8 @@ const Page = ({ params }: { params: { id: number } }) => {
     if (reload && loggedInUser?.token) {
       fetchTasksByProjectId(loggedInUser?.token);
       setReload(false);
+    } else if (loggedInUser?.token) {
+      fetchAllTaskPriorities(loggedInUser?.token);
     }
   }, [reload, loggedInUser]);
 
@@ -109,7 +121,10 @@ const Page = ({ params }: { params: { id: number } }) => {
           return (
             <div
               key={status.id}
-              className="grow flex flex-col max-w-[500px] gap-4 p-4 border-2 shadow-md rounded-md h-[calc(100vh-120px)] overflow-y-auto"
+              className="grow flex flex-col min-w-[300px] max-w-[500px] gap-4 border-t-4 p-4 shadow-md rounded-md h-[calc(100vh-120px)] overflow-y-auto "
+              style={{
+                borderColor: status?.color,
+              }}
             >
               <div className="flex items-center justify-between">
                 <span
@@ -128,6 +143,9 @@ const Page = ({ params }: { params: { id: number } }) => {
               </div>
 
               {modifiedTasks[status.id].map((task: ITask) => {
+                const priorityOfThisProject = taskPriorities.filter(
+                  (priority: ITaskPriority) => priority.id === task.priorityId
+                )[0];
                 return (
                   <TaskCard
                     key={task.id}
@@ -139,6 +157,10 @@ const Page = ({ params }: { params: { id: number } }) => {
                     statusId={status?.id}
                     statusColor={status?.color}
                     developers={task.developers}
+                    dueDate={task?.dueDate}
+                    priorityId={task?.priorityId}
+                    priorityColor={priorityOfThisProject?.color}
+                    priority={priorityOfThisProject?.title}
                     onClick={() => {
                       handleOpenTaskForm(task);
                     }}

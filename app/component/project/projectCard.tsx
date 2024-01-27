@@ -20,7 +20,6 @@ const ProjectCard = (props: IProjectCard) => {
   const handleNavigation = () => {
     router.push(`/projects/${props.id}`);
   };
-  console.log(props.statusColor);
 
   return (
     <div
