@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 
 type Props = {
   developer: IDeveloper;
-  handleDeleteDev: () => void;
+  handleDeleteDev: (id: number) => void;
 };
 
 const DevCard = (props: Props) => {

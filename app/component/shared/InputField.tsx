@@ -23,6 +23,7 @@ const InputField = (props: Props) => {
   return (
     <div>
       <span className="input-title">{props.title}</span>
+      <sup className="text-red-500">{props.required ? "*" : ""}</sup>
       {props.type === "password" ? (
         <Input.Password
           type={props.type}

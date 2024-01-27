@@ -116,12 +116,12 @@ const Page = ({ params }: { params: { id: number } }) => {
           },
         ]}
       />
-      <div className="flex gap-4">
+      <div className="flex gap-4 overflow-x-auto pb-4">
         {taskStatus.map((status: ITaskStatus) => {
           return (
             <div
               key={status.id}
-              className="grow flex flex-col min-w-[300px] max-w-[500px] gap-4 border-t-4 p-4 shadow-md rounded-md h-[calc(100vh-120px)] overflow-y-auto "
+              className="grow flex flex-col min-w-[300px] max-w-[500px] gap-4 border-t-4 p-4 shadow-md rounded-md h-[calc(100vh-160px)] overflow-y-auto "
               style={{
                 borderColor: status?.color,
               }}

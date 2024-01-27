@@ -17,7 +17,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import SelectField from "../shared/selectField";
 import TextAreaField from "../shared/textAreaField";
-import { Button } from "antd";
+import { Button, Checkbox } from "antd";
 import AutoCompleteField from "../shared/autoCompleteField";
 import DevCard from "./devCard";
 import DatePickerField from "../shared/datePickerField";
@@ -40,6 +40,8 @@ const CreateTaskForm = (props: Props) => {
   const [taskPriorities, setTaskPriorities] = useState<ITaskPriority[]>([]);
   const [users, setUsers] = useState<IDeveloper[]>([]);
   const [developerName, setDeveloperName] = useState("");
+  const [bulkCreate, setBulkCreate] = useState(false);
+
   const fetchAllProjects = (token: string) => {
     apiRequest({
       path: PATHS.PROJECTS_BY_OWNER,
@@ -81,18 +83,29 @@ const CreateTaskForm = (props: Props) => {
   const validationSchema = yup.object({
     title: yup
       .string()
-      .required("Title is required.")
-      .min(10, "Title must be at least 10 characters long.")
-      .max(100, "Title must be no more than 100 characters long."),
+      .when("bulkCreate", (bulkCreate, schema) =>
+        bulkCreate
+          ? schema
+          : schema
+              .required("Title is required.")
+              .min(10, "Title must be at least 10 characters long.")
+              .max(100, "Title must be no more than 100 characters long.")
+      ),
     description: yup
       .string()
-      .required("Description is required.")
-      .min(10, "Description must be at least 10 characters long.")
       .max(1000, "Description must be no more than 1000 characters long."),
     projectId: yup.number().required("Project is required."),
     statusId: yup.string().required("Status is required"),
     dueDate: yup.string().nullable(),
     priorityId: yup.number(),
+    taskTitles: yup.string().when("bulkCreate", (bulkCreate, schema) => {
+      return bulkCreate[0]
+        ? schema
+            .required("Please insert tasks")
+            .min(10, "Minimum 10 characters are required")
+            .max(1000, "Max character limit reacher")
+        : schema;
+    }),
   });
 
   const initialValues: ITask = {
@@ -104,9 +117,16 @@ const CreateTaskForm = (props: Props) => {
     developers: props.task?.developers || "[]",
     dueDate: props.task?.dueDate || null,
     priorityId: props.task?.priorityId || 3,
+    taskTitles: undefined,
   };
 
   const createTask = (values: any) => {
+    const payload = { ...values };
+    if (bulkCreate) {
+      delete payload.title;
+    } else {
+      delete payload.taskTitles;
+    }
     apiRequest({
       path: props.update
         ? PATHS.UPDATE_TASK + "?id=" + props.task?.id
@@ -114,10 +134,11 @@ const CreateTaskForm = (props: Props) => {
       method: props.update ? "PUT" : "POST",
       token: loggedInUser?.token,
       data: JSON.stringify({
-        ...values,
+        ...payload,
+        bulkCreate,
         developers: props.update
-          ? values.developers
-          : JSON.parse(values.developers),
+          ? payload.developers
+          : JSON.parse(payload.developers),
       }),
     }).then((response: any) => {
       if (!response?.error) {
@@ -152,6 +173,10 @@ const CreateTaskForm = (props: Props) => {
     );
   };
 
+  const enableBulkCreate = () => {
+    setBulkCreate(!bulkCreate);
+  };
+
   useEffect(() => {
     if (loggedInUser?.token) {
       fetchAllProjects(loggedInUser.token);
@@ -163,21 +188,42 @@ const CreateTaskForm = (props: Props) => {
 
   return (
     <div className="flex flex-col gap-4 items-start">
-      <InputField
-        title="Title"
-        value={formik.values.title}
-        required
-        maxLength={100}
-        showCount
-        onChange={formik.handleChange("title")}
-        onBlur={formik.handleBlur("title")}
-        placeholder="Enter title"
-        error={!!(formik.errors.title && formik.touched.title)}
-        errorMessage={formik.errors.title}
-      />
+      {bulkCreate ? (
+        <div className="w-full flex-col">
+          <TextAreaField
+            title="Tasks"
+            rows={10}
+            maxLength={10000}
+            showCount
+            required
+            wrapperStyle={"w-full"}
+            value={formik.values.taskTitles}
+            onChange={formik.handleChange("taskTitles")}
+            onBlur={formik.handleBlur("taskTitles")}
+            placeholder="Enter taskTitles"
+            error={!!(formik.errors.taskTitles && formik.touched.taskTitles)}
+            errorMessage={formik.errors.taskTitles}
+          />
+          <p className="text-red-500">
+            N.B. Each line will be treated as on task title
+          </p>
+        </div>
+      ) : (
+        <InputField
+          title="Title"
+          value={formik.values.title}
+          required
+          maxLength={100}
+          showCount
+          onChange={formik.handleChange("title")}
+          onBlur={formik.handleBlur("title")}
+          placeholder="Enter title"
+          error={!!(formik.errors.title && formik.touched.title)}
+          errorMessage={formik.errors.title}
+        />
+      )}
       <TextAreaField
         title="Description"
-        required
         rows={10}
         maxLength={1000}
         showCount
@@ -304,20 +350,34 @@ const CreateTaskForm = (props: Props) => {
             );
           })}
       </div>
-      <div className="flex gap-4 ml-auto my-4 w-fit">
-        <Button className="action-button-active" onClick={handleSubmit}>
-          {props.update ? "Update Task" : "Create Task"}
-        </Button>
-        <Button
-          className="action-button-cancel"
-          onClick={() => {
-            formik.resetForm();
-            setDeveloperName("");
-            props.handleClose();
-          }}
-        >
-          Cancel
-        </Button>
+      <div className="flex justify-between gap-4 ml-auto my-4 w-full items-center">
+        {!props.update ? (
+          <Checkbox className="items-center" onChange={enableBulkCreate}>
+            Create tasks in bulk
+          </Checkbox>
+        ) : (
+          <></>
+        )}
+        <div className="flex gap-4 ml-auto">
+          <Button className="action-button-active" onClick={handleSubmit}>
+            {props.update
+              ? "Update Task"
+              : bulkCreate
+              ? "Create Tasks"
+              : "Create Task"}
+          </Button>
+          <Button
+            className="action-button-cancel"
+            onClick={() => {
+              formik.resetForm();
+              setDeveloperName("");
+              setBulkCreate(false);
+              props.handleClose();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
       </div>
     </div>
   );

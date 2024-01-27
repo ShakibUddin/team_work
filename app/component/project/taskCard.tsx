@@ -12,7 +12,7 @@ interface ITaskCard extends ITask {
 const TaskCard = (props: ITaskCard) => {
   return (
     <div
-      className="flex h-auto w-full flex-col items-start justify-start gap-2 border-[1px] min-h-[150px] shadow-md cursor-pointer hover:shadow-lg p-4 rounded-md"
+      className="flex w-full flex-col items-start justify-start gap-2 border-[1px] shadow-md cursor-pointer hover:shadow-lg p-4 rounded-md"
       onClick={props.onClick}
     >
       <div className="flex justify-between w-full">
@@ -26,7 +26,7 @@ const TaskCard = (props: ITaskCard) => {
           {props.dueDate ? dayjs(props.dueDate).format("MM-DD-YYYY") : ""}
         </p>
       </div>
-      <p className="text-xl font-bold text-brand-color">{props.title}</p>
+      <p className="text-xl font-semibold text-brand-color">{props.title}</p>
       <div className="w-full flex justify-between items-center mt-auto">
         <div className="flex gap-2 items-center justify-start">
           <FaRegCommentAlt size={20} /> {"11"}

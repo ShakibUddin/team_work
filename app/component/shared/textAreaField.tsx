@@ -24,6 +24,7 @@ const TextAreaField = (props: Props) => {
   return (
     <div className={props.wrapperStyle}>
       <span className="input-title">{props.title}</span>
+      <sup className="text-red-500">{props.required ? "*" : ""}</sup>
       <TextArea
         value={props.value}
         required={props.required}

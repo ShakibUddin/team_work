@@ -20,6 +20,7 @@ export interface IProject {
 export interface ITask {
     id: number | undefined;
     title: string | undefined;
+    taskTitles?: string | undefined;
     description: string | undefined;
     dueDate: string | null;
     projectId: number | undefined;
