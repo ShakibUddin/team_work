@@ -10,7 +10,7 @@ export interface IProject {
     title: string,
     description: string,
     ownerId?: string,
-    status?: string,
+    statusId: number | undefined,
     statusColor?: string,
     taskCount?: string,
     createdAt?: string,

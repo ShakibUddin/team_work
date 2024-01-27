@@ -96,8 +96,9 @@ const Projects = (props: Props) => {
       <div className="flex flex-wrap gap-4 w-full">
         {projects.map((project: IProject, index: number) => {
           const statusOfThisProject = projectStatus.filter(
-            (status) => status.title === project.status
+            (status) => status.id === project.statusId
           )[0];
+          console.log("statusOfThisProject", statusOfThisProject);
           return (
             <ProjectCard
               id={project.id}
@@ -106,6 +107,7 @@ const Projects = (props: Props) => {
               description={project.description}
               taskCount={project.taskCount}
               status={statusOfThisProject?.title}
+              statusId={project?.statusId}
               statusColor={statusOfThisProject?.color}
               handleOnClick={handleOnEditButtonClick}
             />
