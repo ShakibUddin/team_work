@@ -7,13 +7,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { createUser } from "./services";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ISIGNUP_RESPONSE, IUNAUTHENTICATED_USER } from "./types";
+import { ISIGNUP_RESPONSE, ISIGNUP_UNAUTHENTICATED_USER } from "./types";
+import useAuthServices from "@/app/services/useAuthService";
 
 const Signup = () => {
   const [api, contextHolder] = notification.useNotification();
+  const { createUser } = useAuthServices();
   const loggedIn = useAuthStore((state: AuthState) => state.loggedIn);
   const { setRegistrationSuccessful } = useAuthStore(
     (state: AuthState) => state
@@ -29,7 +30,7 @@ const Signup = () => {
     });
   };
 
-  const handelCreateUser = async (values: IUNAUTHENTICATED_USER) => {
+  const handelCreateUser = async (values: ISIGNUP_UNAUTHENTICATED_USER) => {
     const response = await createUser(values);
     const jsonResponse: ISIGNUP_RESPONSE = await response.json();
     if (jsonResponse?.error) {
@@ -40,7 +41,7 @@ const Signup = () => {
     }
   };
 
-  const initialValues: IUNAUTHENTICATED_USER = {
+  const initialValues: ISIGNUP_UNAUTHENTICATED_USER = {
     firstName: "",
     lastName: "",
     email: "",

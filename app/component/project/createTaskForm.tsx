@@ -6,11 +6,8 @@ import {
   ITaskPriority,
   ITaskStatus,
 } from "@/app/(protected)/projects/types";
-import { PATHS } from "@/app/utils/apiConstants";
-import { useApiRequest } from "@/app/utils/apiService";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
-import { AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
 import InputField from "../shared/InputField";
 import { useFormik } from "formik";
@@ -22,6 +19,9 @@ import AutoCompleteField from "../shared/autoCompleteField";
 import DevCard from "./devCard";
 import DatePickerField from "../shared/datePickerField";
 import dayjs from "dayjs";
+import useTaskServices from "@/app/services/useTaskServices";
+import useProjectServices from "@/app/services/useProjectServices";
+import useUserServices from "@/app/services/useUserServices";
 
 type Props = {
   handleClose: () => void;
@@ -34,51 +34,17 @@ type Props = {
 
 const CreateTaskForm = (props: Props) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
-  const apiRequest = useApiRequest();
-  const [projects, setProjects] = useState<IProject[]>([]);
-  const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
-  const [taskPriorities, setTaskPriorities] = useState<ITaskPriority[]>([]);
-  const [users, setUsers] = useState<IDeveloper[]>([]);
   const [developerName, setDeveloperName] = useState("");
   const [bulkCreate, setBulkCreate] = useState(false);
-
-  const fetchAllProjects = (token: string) => {
-    apiRequest({
-      path: PATHS.PROJECTS_BY_OWNER,
-      method: "GET",
-      token,
-      params: { ownerId: loggedInUser?.id },
-    }).then((response: AxiosResponse) => {
-      setProjects(response?.data);
-    });
-  };
-
-  const fetchAllTaskStatus = (token: string) => {
-    apiRequest({ path: PATHS.TASK_STATUS, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setTaskStatus(response?.data);
-      }
-    );
-  };
-
-  const fetchAllTaskPriorities = (token: string) => {
-    apiRequest({ path: PATHS.TAKS_PRIORITY, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setTaskPriorities(response?.data);
-      }
-    );
-  };
-
-  const fetchAllUsers = (token: string, searchKey?: string) => {
-    apiRequest({
-      path: PATHS.ALL_USERS,
-      method: "GET",
-      token,
-      params: { searchKey },
-    }).then((response: AxiosResponse) => {
-      setUsers(response?.data);
-    });
-  };
+  const {
+    taskPriorities,
+    taskStatus,
+    fetchAllTaskStatus,
+    fetchAllTaskPriorities,
+    createTask,
+  } = useTaskServices();
+  const { projects, fetchAllProjects } = useProjectServices();
+  const { users, fetchAllUsers } = useUserServices();
 
   const validationSchema = yup.object({
     title: yup
@@ -120,36 +86,6 @@ const CreateTaskForm = (props: Props) => {
     taskTitles: undefined,
   };
 
-  const createTask = (values: any) => {
-    const payload = { ...values };
-    if (bulkCreate) {
-      delete payload.title;
-    } else {
-      delete payload.taskTitles;
-    }
-    apiRequest({
-      path: props.update
-        ? PATHS.UPDATE_TASK + "?id=" + props.task?.id
-        : PATHS.CREATE_TASK,
-      method: props.update ? "PUT" : "POST",
-      token: loggedInUser?.token,
-      data: JSON.stringify({
-        ...payload,
-        bulkCreate,
-        developers: props.update
-          ? payload.developers
-          : JSON.parse(payload.developers),
-      }),
-    }).then((response: any) => {
-      if (!response?.error) {
-        formik.resetForm();
-        setDeveloperName("");
-        props.handleReload();
-        props.handleClose();
-      }
-    });
-  };
-
   const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     formik.handleSubmit();
@@ -159,7 +95,18 @@ const CreateTaskForm = (props: Props) => {
     enableReinitialize: true,
     initialValues,
     validationSchema,
-    onSubmit: createTask,
+    onSubmit: (values) => {
+      createTask({
+        bulkCreate,
+        props,
+        values,
+        token: loggedInUser?.token || "",
+        handleOnSuccess: () => {
+          formik.resetForm();
+          setDeveloperName("");
+        },
+      });
+    },
   });
 
   const handleDeleteDev = (id: number) => {
@@ -179,7 +126,10 @@ const CreateTaskForm = (props: Props) => {
 
   useEffect(() => {
     if (loggedInUser?.token) {
-      fetchAllProjects(loggedInUser.token);
+      fetchAllProjects({
+        ownerId: loggedInUser?.id,
+        token: loggedInUser.token,
+      });
       fetchAllTaskStatus(loggedInUser.token);
       fetchAllUsers(loggedInUser.token);
       fetchAllTaskPriorities(loggedInUser.token);

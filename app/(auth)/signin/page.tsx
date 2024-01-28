@@ -9,11 +9,12 @@ import React, { useEffect, useRef } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { ILOGIN_RESPONSE, IUNAUTHENTICATED_USER } from "./types";
-import { loginUser } from "./services";
+import { ILOGIN_RESPONSE, ILOGIN_UNAUTHENTICATED_USER } from "./types";
+import useAuthServices from "@/app/services/useAuthService";
 
 const Signin = () => {
   const [api, contextHolder] = notification.useNotification();
+  const { loginUser } = useAuthServices();
   const ref = useRef({ flag: false });
   const {
     setLoggedIn,
@@ -32,7 +33,7 @@ const Signin = () => {
     });
   };
 
-  const handleLogin = async (values: IUNAUTHENTICATED_USER) => {
+  const handleLogin = async (values: ILOGIN_UNAUTHENTICATED_USER) => {
     const response = await loginUser(values);
     const jsonResponse: ILOGIN_RESPONSE = await response.json();
     if (jsonResponse?.error) {
@@ -47,7 +48,7 @@ const Signin = () => {
     }
   };
 
-  const initialValues: IUNAUTHENTICATED_USER = {
+  const initialValues: ILOGIN_UNAUTHENTICATED_USER = {
     email: "",
     password: "",
   };

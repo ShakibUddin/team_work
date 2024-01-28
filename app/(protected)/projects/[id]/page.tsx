@@ -1,10 +1,7 @@
 "use client";
 import TaskCard from "@/app/component/project/taskCard";
-import { PATHS } from "@/app/utils/apiConstants";
-import { useApiRequest } from "@/app/utils/apiService";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
-import { AxiosResponse } from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { ITask, ITaskByStatus, ITaskPriority, ITaskStatus } from "../types";
 import { MdAdd } from "react-icons/md";
@@ -12,59 +9,28 @@ import { Modal } from "antd";
 import CreateTaskForm from "@/app/component/project/createTaskForm";
 import CustomBreadCrumb from "@/app/component/shared/customBreadcrumb";
 import Link from "next/link";
-
-// type Props = {};
+import useTaskServices from "@/app/services/useTaskServices";
 
 const Page = ({ params }: { params: { id: number } }) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
-  const [tasks, setTasks] = useState<ITask[]>([]);
   const [selectedTask, setSelectedTask] = useState<ITask | undefined>();
-  const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
   const [openTaskCreatingModal, setOpenTaskCreationModal] = useState(false);
   const [updateTask, setUpdateTask] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedTaskStatusId, setSelectedTaskStatusId] = useState<number>();
-  const [taskPriorities, setTaskPriorities] = useState<ITaskPriority[]>([]);
 
-  const apiRequest = useApiRequest();
-
-  const fetchTasksByProjectId = (token: string) => {
-    apiRequest({
-      path: PATHS.TASKS_IN_A_PROJECT,
-      method: "GET",
-      token,
-      params: { projectId: params?.id },
-    }).then((response: AxiosResponse) => {
-      setTasks(response?.data);
-    });
-  };
-
-  const fetchAllTaskPriorities = (token: string) => {
-    apiRequest({ path: PATHS.TAKS_PRIORITY, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setTaskPriorities(response?.data);
-      }
-    );
-  };
-
-  const fetchAllTaskStatus = (token: string) => {
-    apiRequest({ path: PATHS.TASK_STATUS, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setTaskStatus(response?.data);
-      }
-    );
-  };
+  const {
+    tasks,
+    taskPriorities,
+    taskStatus,
+    fetchAllTaskStatus,
+    fetchAllTaskPriorities,
+    fetchTasksByProjectId,
+  } = useTaskServices();
 
   const handleReload = () => {
     setReload(true);
   };
-
-  useEffect(() => {
-    if (loggedInUser?.token && params?.id) {
-      fetchTasksByProjectId(loggedInUser?.token);
-      fetchAllTaskStatus(loggedInUser?.token);
-    }
-  }, [loggedInUser, params?.id]);
 
   const convertTasks = (tasks: ITask[], taskStatus: ITaskStatus[]) => {
     const result: ITaskByStatus = {};
@@ -96,13 +62,20 @@ const Page = ({ params }: { params: { id: number } }) => {
   };
 
   useEffect(() => {
-    if (reload && loggedInUser?.token) {
-      fetchTasksByProjectId(loggedInUser?.token);
-      setReload(false);
-    } else if (loggedInUser?.token) {
+    if (loggedInUser?.token) {
       fetchAllTaskPriorities(loggedInUser?.token);
+      fetchAllTaskStatus(loggedInUser?.token);
     }
-  }, [reload, loggedInUser]);
+  }, [loggedInUser]);
+
+  useEffect(() => {
+    if (reload) {
+      setReload(false);
+    }
+    if (loggedInUser?.token && params) {
+      fetchTasksByProjectId(params, loggedInUser?.token);
+    }
+  }, [reload, loggedInUser, params]);
 
   return (
     <div className="flex flex-col gap-4">

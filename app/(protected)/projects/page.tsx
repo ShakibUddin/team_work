@@ -1,48 +1,26 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { IProject, IProjectStatus, ITaskPriority } from "./types";
+import { IProject } from "./types";
 import ProjectCard from "@/app/component/project/projectCard";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import { AuthState } from "@/store/authStore/authStoreTypes";
-import { AxiosResponse } from "axios";
-import { PATHS } from "@/app/utils/apiConstants";
-import { useApiRequest } from "@/app/utils/apiService";
-import { Breadcrumb, Button, Modal } from "antd";
+import { Button, Modal } from "antd";
 import CreateProjectForm from "@/app/component/project/createProjectForm";
 import CustomBreadCrumb from "@/app/component/shared/customBreadcrumb";
+import useProjectServices from "@/app/services/useProjectServices";
 
 type Props = {};
 
 const Projects = (props: Props) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
-  const apiRequest = useApiRequest();
-  const [projects, setProjects] = useState<IProject[]>([]);
   const [showProjectCreationForm, setShowProjectCreationForm] = useState(false);
   const [updateProject, setUpdateProject] = useState(false);
   const [selectedProject, setSelectedProject] = useState<
     IProject | undefined
   >();
-  const [projectStatus, setProjectStatus] = useState<IProjectStatus[]>([]);
   const [reload, setReload] = useState(false);
-
-  const fetchAllProjects = (token: string) => {
-    apiRequest({
-      path: PATHS.PROJECTS_BY_OWNER,
-      method: "GET",
-      token,
-      params: { ownerId: loggedInUser?.id },
-    }).then((response: AxiosResponse) => {
-      setProjects(response?.data);
-    });
-  };
-
-  const fetchAllProjectStatus = (token: string) => {
-    apiRequest({ path: PATHS.PROJECT_STATUS, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setProjectStatus(response?.data);
-      }
-    );
-  };
+  const { projects, projectStatus, fetchAllProjects, fetchAllProjectStatus } =
+    useProjectServices();
 
   const openCreateProjectForm = () => {
     setShowProjectCreationForm(true);
@@ -67,14 +45,18 @@ const Projects = (props: Props) => {
   useEffect(() => {
     if (loggedInUser?.token) {
       fetchAllProjectStatus(loggedInUser?.token);
-      fetchAllProjects(loggedInUser?.token);
     }
   }, [loggedInUser]);
 
   useEffect(() => {
-    if (reload && loggedInUser?.token) {
-      fetchAllProjects(loggedInUser?.token);
+    if (reload) {
       setReload(false);
+    }
+    if (loggedInUser?.token) {
+      fetchAllProjects({
+        ownerId: loggedInUser?.id,
+        token: loggedInUser?.token,
+      });
     }
   }, [reload, loggedInUser]);
 

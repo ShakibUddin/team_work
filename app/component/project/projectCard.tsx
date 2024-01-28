@@ -1,6 +1,6 @@
 "use client";
 import { IProject } from "@/app/(protected)/projects/types";
-import { Avatar, Button, Popover } from "antd";
+import { Avatar, Popover } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";

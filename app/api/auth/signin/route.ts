@@ -1,4 +1,4 @@
-import { IUNAUTHENTICATED_USER } from "@/app/(auth)/signin/types";
+import { ILOGIN_UNAUTHENTICATED_USER } from "@/app/(auth)/signin/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
         throw new Error('Error');
     }
 
-    const payload: IUNAUTHENTICATED_USER = body || {};
+    const payload: ILOGIN_UNAUTHENTICATED_USER = body || {};
 
     const response = await fetch(baseUrl + "user/login", {
         method: "POST",

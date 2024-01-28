@@ -1,4 +1,3 @@
-/* eslint-disable tailwindcss/migration-from-tailwind-2 */
 import Link from "next/link";
 import React from "react";
 import millify from "millify";

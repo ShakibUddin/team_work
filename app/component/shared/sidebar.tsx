@@ -38,7 +38,7 @@ const Sidebar = (props: Props) => {
     setCollapsed(!collapsed);
   };
 
-  const getItemKey = (key) => {
+  const getItemKey = (key: string) => {
     if (pathname.includes(key)) {
       return pathname;
     }

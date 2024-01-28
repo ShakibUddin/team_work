@@ -20,10 +20,10 @@ const TaskCard = (props: ITaskCard) => {
           className="text-white px-4 rounded-sm"
           style={{ backgroundColor: props.priorityColor }}
         >
-          {props.priority}
+          {props.priority} Priority
         </p>
         <p className="font-semibold">
-          {props.dueDate ? dayjs(props.dueDate).format("MM-DD-YYYY") : ""}
+          Due {props.dueDate ? dayjs(props.dueDate).format("MM-DD-YYYY") : ""}
         </p>
       </div>
       <p className="text-xl font-semibold text-brand-color">{props.title}</p>

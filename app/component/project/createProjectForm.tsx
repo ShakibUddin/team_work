@@ -1,17 +1,15 @@
 "use client";
 import { IProject, IProjectStatus } from "@/app/(protected)/projects/types";
-import { PATHS } from "@/app/utils/apiConstants";
-import { useApiRequest } from "@/app/utils/apiService";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import InputField from "../shared/InputField";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import TextAreaField from "../shared/textAreaField";
 import { Button } from "antd";
-import { AxiosResponse } from "axios";
 import SelectField from "../shared/selectField";
+import useProjectServices from "@/app/services/useProjectServices";
 
 type Props = {
   handleClose: () => void;
@@ -22,8 +20,8 @@ type Props = {
 
 const CreateProjectForm = (props: Props) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
-  const apiRequest = useApiRequest();
-  const [projectStatus, setProjectStatus] = useState<IProjectStatus[]>([]);
+  const { projectStatus, fetchAllProjectStatus, createProject } =
+    useProjectServices();
   const validationSchema = yup.object({
     title: yup
       .string()
@@ -46,35 +44,6 @@ const CreateProjectForm = (props: Props) => {
     statusId: props.project?.statusId || 1,
   };
 
-  const fetchAllProjectStatus = (token: string) => {
-    apiRequest({ path: PATHS.PROJECT_STATUS, method: "GET", token }).then(
-      (response: AxiosResponse) => {
-        setProjectStatus(response?.data);
-      }
-    );
-  };
-
-  const createProject = (values: any) => {
-    const payload = { ...values };
-    if (!props.update) {
-      delete payload.id;
-    }
-    apiRequest({
-      path: props.update
-        ? PATHS.UPDATE_PROJECT + "?id=" + props.project?.id
-        : PATHS.CREATE_PROJECT,
-      method: props.update ? "PUT" : "POST",
-      token: loggedInUser?.token,
-      data: JSON.stringify(payload),
-    }).then((response: any) => {
-      if (!response?.error) {
-        formik.resetForm();
-        props.handleReload();
-        props.handleClose();
-      }
-    });
-  };
-
   const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     formik.handleSubmit();
@@ -84,7 +53,16 @@ const CreateProjectForm = (props: Props) => {
     enableReinitialize: true,
     initialValues,
     validationSchema,
-    onSubmit: createProject,
+    onSubmit: (values) => {
+      createProject({
+        props,
+        values,
+        token: loggedInUser?.token || "",
+        handleOnSuccess: () => {
+          formik.resetForm();
+        },
+      });
+    },
   });
 
   useEffect(() => {

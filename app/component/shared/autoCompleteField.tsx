@@ -16,7 +16,7 @@ type Props = {
   value?: string;
   popupMatchSelectWidth?: number;
   options: SelectOption[];
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: string | undefined) => void;
   onSelect: any;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean;

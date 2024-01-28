@@ -1,6 +1,6 @@
 import { IUSER } from "@/store/authStore/authStoreTypes"
 
-export interface IUNAUTHENTICATED_USER {
+export interface ILOGIN_UNAUTHENTICATED_USER {
     email: string,
     password: string
 }

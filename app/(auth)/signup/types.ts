@@ -11,6 +11,6 @@ export interface ISIGNUP_RESPONSE {
     data: null
 }
 
-export interface IUNAUTHENTICATED_USER extends IUSER {
+export interface ISIGNUP_UNAUTHENTICATED_USER extends IUSER {
     confirmPassword: string
 }
