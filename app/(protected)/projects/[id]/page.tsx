@@ -1,12 +1,12 @@
 "use client";
-import TaskCard from "@/app/component/project/taskCard";
+import TaskCard from "@/app/component/project/task/taskCard";
 import { AuthState } from "@/store/authStore/authStoreTypes";
 import useAuthStore from "@/store/authStore/useAuthStore";
 import React, { useEffect, useMemo, useState } from "react";
 import { ITask, ITaskByStatus, ITaskPriority, ITaskStatus } from "../types";
 import { MdAdd } from "react-icons/md";
 import { Modal } from "antd";
-import CreateTaskForm from "@/app/component/project/createTaskForm";
+import CreateTaskForm from "@/app/component/project/task/createTaskForm";
 import CustomBreadCrumb from "@/app/component/shared/customBreadcrumb";
 import Link from "next/link";
 import useTaskServices from "@/app/services/useTaskServices";
@@ -148,7 +148,7 @@ const Page = ({ params }: { params: { id: number } }) => {
         title={updateTask ? "Update Task" : "Create Task"}
         open={openTaskCreatingModal}
         footer={null}
-        width={800}
+        width={1400}
         onCancel={handleCloseCreateTaskModal}
         centered
       >
