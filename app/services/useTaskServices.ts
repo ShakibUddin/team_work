@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ITask, ITaskPriority, ITaskStatus } from "../(protected)/projects/types";
+import { IComment, ITask, ITaskPriority, ITaskStatus } from "../(protected)/projects/types";
 import { useApiRequest } from "../utils/apiService";
 import { AxiosResponse } from "axios";
 import { PATHS } from "../utils/apiConstants";
@@ -10,6 +10,7 @@ const useTaskServices = () => {
     const [tasks, setTasks] = useState<ITask[]>([]);
     const [taskPriorities, setTaskPriorities] = useState<ITaskPriority[]>([]);
     const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
+    const [comments, setComments] = useState<IComment[]>([]);
 
     const fetchTasksByProjectId = (params: any, token: string) => {
         apiRequest({
@@ -67,7 +68,36 @@ const useTaskServices = () => {
         });
     };
 
-    return { tasks, taskPriorities, taskStatus, fetchAllTaskStatus, fetchAllTaskPriorities, fetchTasksByProjectId, createTask }
+    const addComment = ({ comment, userId, taskId, token, handleOnSuccess }: { comment: string, userId: number, taskId: number, token: string, handleOnSuccess: () => void }) => {
+        apiRequest({
+            path: PATHS.ADD_COMMENT,
+            method: "POST",
+            token,
+            data: JSON.stringify({
+                comment,
+                userId,
+                taskId
+            }),
+        }).then((response: any) => {
+            if (!response?.error) {
+                handleOnSuccess();
+            }
+        });
+    };
+
+    const fetchAllComments = ({ token, taskId }: { token: string, taskId: number }) => {
+        apiRequest({ path: PATHS.COMMENTS, method: "GET", token, params: { taskId } }).then(
+            (response: AxiosResponse) => {
+                setComments(response?.data);
+            }
+        );
+    };
+
+    const resetComments = () => {
+        setComments([])
+    }
+
+    return { tasks, taskPriorities, taskStatus, comments, fetchAllTaskStatus, fetchAllTaskPriorities, fetchTasksByProjectId, createTask, fetchAllComments, addComment, resetComments }
 }
 
 export default useTaskServices

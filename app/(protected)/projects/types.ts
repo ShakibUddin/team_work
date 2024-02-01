@@ -41,6 +41,17 @@ export interface IProjectStatus {
     updatedAt: string
 }
 
+export interface IComment {
+    id: number,
+    comment: string,
+    userName: string,
+    userId: number,
+    taskId: number,
+    avatar?: string,
+    createdAt: string,
+    updatedAt: string
+}
+
 export interface ITaskByStatus {
     [key: number]: ITask[];
 }

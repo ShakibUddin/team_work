@@ -43,6 +43,7 @@ const CreateTaskForm = (props: Props) => {
     fetchAllTaskStatus,
     fetchAllTaskPriorities,
     createTask,
+    resetComments,
   } = useTaskServices();
   const { projects, fetchAllProjects } = useProjectServices();
   const { users, fetchAllUsers } = useUserServices();
@@ -137,9 +138,19 @@ const CreateTaskForm = (props: Props) => {
     }
   }, [loggedInUser]);
 
+  useEffect(() => {
+    if (!props?.task?.id) {
+      resetComments();
+    }
+  }, [props?.task?.id]);
+
   return (
     <div className="flex flex-wrap lg:h-[calc(100vh-200px)] h-auto gap-4">
-      <div className="flex flex-col gap-4 items-start lg:w-[49%] w-full overflow-y-auto h-full shadow-md p-4 rounded-md">
+      <div
+        className={`flex flex-col gap-4 items-start overflow-y-auto h-full shadow-md p-4 rounded-md ${
+          props?.task?.id ? "lg:w-[49%] w-full" : "w-full"
+        }`}
+      >
         {bulkCreate ? (
           <div className="w-full flex-col">
             <TextAreaField
@@ -327,6 +338,7 @@ const CreateTaskForm = (props: Props) => {
                 formik.resetForm();
                 setDeveloperName("");
                 setBulkCreate(false);
+                resetComments();
                 props.handleClose();
               }}
             >
@@ -335,7 +347,16 @@ const CreateTaskForm = (props: Props) => {
           </div>
         </div>
       </div>
-      <TaskCommentSection wrapperStyle="lg:w-[49%] w-full p-4" />
+      {props?.task?.id ? (
+        <TaskCommentSection
+          taskId={props?.task?.id}
+          wrapperStyle={`lg:w-[49%] w-full p-4 ${
+            props?.task?.id ? "lg:w-[49%] w-full" : "w-0"
+          }`}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

@@ -15,4 +15,6 @@ export const PATHS = {
     UPDATE_TASK: "task/update",
     CREATE_PROJECT: "project/create",
     UPDATE_PROJECT: "project/update",
+    COMMENTS: "task/comment",
+    ADD_COMMENT: "task/comment/add",
 };

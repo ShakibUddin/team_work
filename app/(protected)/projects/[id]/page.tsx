@@ -94,7 +94,7 @@ const Page = ({ params }: { params: { id: number } }) => {
           return (
             <div
               key={status.id}
-              className="grow flex flex-col min-w-[300px] max-w-[500px] gap-4 border-t-4 p-4 shadow-md rounded-md h-[calc(100vh-160px)] overflow-y-auto "
+              className="grow flex flex-col min-w-[350px] max-w-[500px] gap-4 border-t-4 p-4 shadow-md rounded-md h-[calc(100vh-160px)] overflow-y-auto "
               style={{
                 borderColor: status?.color,
               }}

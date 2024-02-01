@@ -27,10 +27,7 @@ const TaskCard = (props: ITaskCard) => {
         </p>
       </div>
       <p className="text-xl font-semibold text-brand-color">{props.title}</p>
-      <div className="w-full flex justify-between items-center mt-auto">
-        <div className="flex gap-2 items-center justify-start">
-          <FaRegCommentAlt size={20} /> {"11"}
-        </div>
+      <div className="w-full flex justify-end items-center mt-auto">
         <Avatar.Group
           maxCount={3}
           maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
