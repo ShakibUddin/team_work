@@ -52,7 +52,10 @@ const Signup = () => {
   const validationSchema = yup.object({
     firstName: yup.string().required("First name is required."),
     lastName: yup.string().required("Last name is required."),
-    email: yup.string().required("Email is required."),
+    email: yup
+      .string()
+      .required("Email is required.")
+      .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Email is not valid."),
     password: yup.string().required("Password is required"),
     confirmPassword: yup.string().required("Enter password again"),
   });
