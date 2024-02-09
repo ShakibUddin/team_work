@@ -22,9 +22,13 @@ const TaskCard = (props: ITaskCard) => {
         >
           {props.priority} Priority
         </p>
-        <p className="font-semibold">
-          Due {props.dueDate ? dayjs(props.dueDate).format("MM-DD-YYYY") : ""}
-        </p>
+        {props.dueDate ? (
+          <p className="font-semibold">
+            Due {dayjs(props.dueDate).format("MM-DD-YYYY")}
+          </p>
+        ) : (
+          <></>
+        )}
       </div>
       <p className="text-xl font-semibold text-brand-color">{props.title}</p>
       <div className="w-full flex justify-end items-center mt-auto">
