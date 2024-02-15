@@ -3,7 +3,7 @@ import { SizeType } from "antd/es/config-provider/SizeContext";
 import React from "react";
 type SelectOption = {
   value: string | number;
-  label: string;
+  label: string | React.ReactNode;
   disabled?: boolean;
 };
 type Props = {

@@ -13,6 +13,7 @@ interface ApiRequestConfig {
 
 export const useApiRequest = () => {
     const { setLoggedIn, setLoggedInUser } = useAuthStore((state: AuthState) => state);
+    const { loggedInUser } = useAuthStore((state: AuthState) => state);
 
     const apiRequest = async (config: ApiRequestConfig) => {
         const { method, path, data, token, params } = config;
@@ -20,7 +21,7 @@ export const useApiRequest = () => {
         // Default headers
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
+            'Authorization': 'Bearer ' + loggedInUser?.token,
         };
 
         try {

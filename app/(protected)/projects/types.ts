@@ -17,10 +17,22 @@ export interface IProject {
     updatedAt?: string
 }
 
+export interface IComment {
+    id: number,
+    comment: string,
+    userName: string,
+    userId: number,
+    taskId: number,
+    avatar?: string,
+    createdAt: string,
+    updatedAt: string
+}
+
 export interface ITask {
     id: number | undefined;
     title: string | undefined;
     taskTitles?: string | undefined;
+    comments: IComment[];
     description: string | undefined;
     dueDate: string | null;
     projectId: number | undefined;
@@ -41,16 +53,7 @@ export interface IProjectStatus {
     updatedAt: string
 }
 
-export interface IComment {
-    id: number,
-    comment: string,
-    userName: string,
-    userId: number,
-    taskId: number,
-    avatar?: string,
-    createdAt: string,
-    updatedAt: string
-}
+
 
 export interface ITaskByStatus {
     [key: number]: ITask[];

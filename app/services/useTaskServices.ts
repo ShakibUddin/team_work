@@ -12,34 +12,33 @@ const useTaskServices = () => {
     const [taskStatus, setTaskStatus] = useState<ITaskStatus[]>([]);
     const [comments, setComments] = useState<IComment[]>([]);
 
-    const fetchTasksByProjectId = (params: any, token: string) => {
+    const fetchTasksByProjectId = (params: any) => {
         apiRequest({
             path: PATHS.TASKS_IN_A_PROJECT,
             method: "GET",
-            token,
             params: { projectId: params?.id },
         }).then((response: AxiosResponse) => {
             setTasks(response?.data);
         });
     };
 
-    const fetchAllTaskPriorities = (token: string) => {
-        apiRequest({ path: PATHS.TAKS_PRIORITY, method: "GET", token }).then(
+    const fetchAllTaskPriorities = () => {
+        apiRequest({ path: PATHS.TAKS_PRIORITY, method: "GET" }).then(
             (response: AxiosResponse) => {
                 setTaskPriorities(response?.data);
             }
         );
     };
 
-    const fetchAllTaskStatus = (token: string) => {
-        apiRequest({ path: PATHS.TASK_STATUS, method: "GET", token }).then(
+    const fetchAllTaskStatus = () => {
+        apiRequest({ path: PATHS.TASK_STATUS, method: "GET" }).then(
             (response: AxiosResponse) => {
                 setTaskStatus(response?.data);
             }
         );
     };
 
-    const createTask = ({ bulkCreate, values, props, token, handleOnSuccess }: { bulkCreate: boolean, values: any, props: any, token: string, handleOnSuccess: () => void }) => {
+    const createTask = ({ bulkCreate, values, props, handleOnSuccess }: { bulkCreate: boolean, values: any, props: any, handleOnSuccess: () => void }) => {
         const payload = { ...values };
         if (bulkCreate) {
             delete payload.title;
@@ -51,7 +50,6 @@ const useTaskServices = () => {
                 ? PATHS.UPDATE_TASK + "?id=" + props.task?.id
                 : PATHS.CREATE_TASK,
             method: props.update ? "PUT" : "POST",
-            token,
             data: JSON.stringify({
                 ...payload,
                 bulkCreate,
@@ -68,11 +66,10 @@ const useTaskServices = () => {
         });
     };
 
-    const addComment = ({ comment, userId, taskId, token, handleOnSuccess }: { comment: string, userId: number, taskId: number, token: string, handleOnSuccess: () => void }) => {
+    const addComment = ({ comment, userId, taskId, handleOnSuccess }: { comment: string, userId: number, taskId: number, handleOnSuccess: () => void }) => {
         apiRequest({
             path: PATHS.ADD_COMMENT,
             method: "POST",
-            token,
             data: JSON.stringify({
                 comment,
                 userId,
@@ -85,8 +82,8 @@ const useTaskServices = () => {
         });
     };
 
-    const fetchAllComments = ({ token, taskId }: { token: string, taskId: number }) => {
-        apiRequest({ path: PATHS.COMMENTS, method: "GET", token, params: { taskId } }).then(
+    const fetchAllComments = ({ taskId }: { taskId: number }) => {
+        apiRequest({ path: PATHS.COMMENTS, method: "GET", params: { taskId } }).then(
             (response: AxiosResponse) => {
                 setComments(response?.data);
             }

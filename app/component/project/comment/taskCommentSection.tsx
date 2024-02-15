@@ -21,7 +21,6 @@ const TaskCommentSection = (props: Props) => {
     setCommentText("");
     if (props.taskId) {
       fetchAllComments({
-        token: loggedInUser?.token || "",
         taskId: props.taskId || 0,
       });
     }
@@ -30,7 +29,6 @@ const TaskCommentSection = (props: Props) => {
   useEffect(() => {
     if (props.taskId) {
       fetchAllComments({
-        token: loggedInUser?.token || "",
         taskId: props.taskId || 0,
       });
     }
@@ -71,7 +69,6 @@ const TaskCommentSection = (props: Props) => {
               comment: commentText,
               taskId: props?.taskId || 0,
               userId: loggedInUser?.id || 0,
-              token: loggedInUser?.token || "",
               handleOnSuccess: handleOnCommentAddSuccess,
             });
           }}

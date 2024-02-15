@@ -86,6 +86,7 @@ const CreateTaskForm = (props: Props) => {
     dueDate: props.task?.dueDate || null,
     priorityId: props.task?.priorityId || 3,
     taskTitles: undefined,
+    comments: [],
   };
 
   const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
@@ -102,7 +103,6 @@ const CreateTaskForm = (props: Props) => {
         bulkCreate,
         props,
         values,
-        token: loggedInUser?.token || "",
         handleOnSuccess: () => {
           formik.resetForm();
           setDeveloperName("");
@@ -127,15 +127,12 @@ const CreateTaskForm = (props: Props) => {
   };
 
   useEffect(() => {
-    if (loggedInUser?.token) {
-      fetchAllProjects({
-        ownerId: loggedInUser?.id,
-        token: loggedInUser.token,
-      });
-      fetchAllTaskStatus(loggedInUser.token);
-      fetchAllUsers(loggedInUser.token);
-      fetchAllTaskPriorities(loggedInUser.token);
-    }
+    fetchAllProjects({
+      ownerId: loggedInUser?.id || 0,
+    });
+    fetchAllTaskStatus();
+    fetchAllUsers();
+    fetchAllTaskPriorities();
   }, [loggedInUser]);
 
   useEffect(() => {
@@ -269,7 +266,7 @@ const CreateTaskForm = (props: Props) => {
           value={developerName}
           onChange={(value) => {
             setDeveloperName(String(value));
-            fetchAllUsers(loggedInUser?.token || "", String(value));
+            fetchAllUsers();
           }}
           onSelect={(value: string | number, option: any) => {
             if (formik.values.developers) {

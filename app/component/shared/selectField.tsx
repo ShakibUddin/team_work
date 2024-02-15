@@ -3,7 +3,7 @@ import React from "react";
 
 type SelectOption = {
   value: string | number;
-  label: string;
+  label: string | React.ReactNode;
   disabled?: boolean;
 };
 
@@ -16,11 +16,13 @@ type Props = {
   defaultValue?: React.ChangeEvent<HTMLInputElement>;
   options: SelectOption[];
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  handleSearch?: (value: string) => void;
   error?: boolean;
   errorMessage?: string;
   disabled?: boolean;
   allowClear?: boolean;
+  showSearch?: boolean;
 };
 
 const SelectField = (props: Props) => {
@@ -40,6 +42,8 @@ const SelectField = (props: Props) => {
         onBlur={props.onBlur}
         options={props.options}
         allowClear={props.allowClear}
+        showSearch={props.showSearch}
+        onSearch={props.handleSearch}
       />
       <span className="error-message">
         {props.error ? props.errorMessage : ""}

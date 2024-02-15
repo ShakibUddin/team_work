@@ -43,22 +43,17 @@ const Projects = (props: Props) => {
   };
 
   useEffect(() => {
-    if (loggedInUser?.token) {
-      fetchAllProjectStatus(loggedInUser?.token);
-    }
-  }, [loggedInUser]);
+    fetchAllProjectStatus();
+  }, []);
 
   useEffect(() => {
     if (reload) {
       setReload(false);
     }
-    if (loggedInUser?.token) {
-      fetchAllProjects({
-        ownerId: loggedInUser?.id,
-        token: loggedInUser?.token,
-      });
-    }
-  }, [reload, loggedInUser]);
+    fetchAllProjects({
+      ownerId: loggedInUser?.id || 0,
+    });
+  }, [reload]);
 
   return (
     <div className="flex flex-col">

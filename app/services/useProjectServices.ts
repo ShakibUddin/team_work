@@ -9,26 +9,25 @@ const useProjectServices = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
     const [projectStatus, setProjectStatus] = useState<IProjectStatus[]>([]);
 
-    const fetchAllProjects = ({ ownerId, token }: { ownerId: number, token: string }) => {
+    const fetchAllProjects = ({ ownerId }: { ownerId: number }) => {
         apiRequest({
             path: PATHS.PROJECTS_BY_OWNER,
             method: "GET",
-            token,
             params: { ownerId },
         }).then((response: AxiosResponse) => {
             setProjects(response?.data);
         });
     };
 
-    const fetchAllProjectStatus = (token: string) => {
-        apiRequest({ path: PATHS.PROJECT_STATUS, method: "GET", token }).then(
+    const fetchAllProjectStatus = () => {
+        apiRequest({ path: PATHS.PROJECT_STATUS, method: "GET" }).then(
             (response: AxiosResponse) => {
                 setProjectStatus(response?.data);
             }
         );
     };
 
-    const createProject = ({ props, values, token, handleOnSuccess }: { props: any, values: any, token: string, handleOnSuccess: () => void }) => {
+    const createProject = ({ props, values, handleOnSuccess }: { props: any, values: any, handleOnSuccess: () => void }) => {
         const payload = { ...values };
         if (!props.update) {
             delete payload.id;
@@ -38,7 +37,6 @@ const useProjectServices = () => {
                 ? PATHS.UPDATE_PROJECT + "?id=" + props.project?.id
                 : PATHS.CREATE_PROJECT,
             method: props.update ? "PUT" : "POST",
-            token,
             data: JSON.stringify(payload),
         }).then((response: any) => {
             if (!response?.error) {

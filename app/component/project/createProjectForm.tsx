@@ -57,7 +57,6 @@ const CreateProjectForm = (props: Props) => {
       createProject({
         props,
         values,
-        token: loggedInUser?.token || "",
         handleOnSuccess: () => {
           formik.resetForm();
         },
@@ -66,8 +65,8 @@ const CreateProjectForm = (props: Props) => {
   });
 
   useEffect(() => {
-    if (loggedInUser?.token) fetchAllProjectStatus(loggedInUser?.token);
-  }, [loggedInUser]);
+    fetchAllProjectStatus();
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 items-start">

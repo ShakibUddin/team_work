@@ -8,12 +8,11 @@ const useUserServices = () => {
     const apiRequest = useApiRequest();
     const [users, setUsers] = useState<IDeveloper[]>([]);
 
-    const fetchAllUsers = (token: string, searchKey?: string) => {
+    const fetchAllUsers = ({ searchKey, limit }: { searchKey?: string, limit?: number }) => {
         apiRequest({
             path: PATHS.ALL_USERS,
             method: "GET",
-            token,
-            params: { searchKey },
+            params: { searchKey, limit },
         }).then((response: AxiosResponse) => {
             setUsers(response?.data);
         });

@@ -5,11 +5,12 @@ import useAuthStore from "@/store/authStore/useAuthStore";
 import React, { useEffect, useMemo, useState } from "react";
 import { ITask, ITaskByStatus, ITaskPriority, ITaskStatus } from "../types";
 import { MdAdd } from "react-icons/md";
-import { Modal } from "antd";
+import { Button, Modal, Popover } from "antd";
 import CreateTaskForm from "@/app/component/project/task/createTaskForm";
 import CustomBreadCrumb from "@/app/component/shared/customBreadcrumb";
 import Link from "next/link";
 import useTaskServices from "@/app/services/useTaskServices";
+import InvitationBox from "@/app/component/project/invitationModal";
 
 const Page = ({ params }: { params: { id: number } }) => {
   const { loggedInUser } = useAuthStore((state: AuthState) => state);
@@ -18,6 +19,7 @@ const Page = ({ params }: { params: { id: number } }) => {
   const [updateTask, setUpdateTask] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedTaskStatusId, setSelectedTaskStatusId] = useState<number>();
+  const [openInvitationModal, setOpenInvitationModal] = useState(false);
 
   const {
     tasks,
@@ -61,34 +63,59 @@ const Page = ({ params }: { params: { id: number } }) => {
     setSelectedTask(task);
   };
 
+  const handleInviteClick = () => {
+    setOpenInvitationModal(true);
+  };
+
+  const handleInvitaionBoxClose = () => {
+    setOpenInvitationModal(false);
+  };
+
   useEffect(() => {
-    if (loggedInUser?.token) {
-      fetchAllTaskPriorities(loggedInUser?.token);
-      fetchAllTaskStatus(loggedInUser?.token);
-    }
-  }, [loggedInUser]);
+    fetchAllTaskPriorities();
+    fetchAllTaskStatus();
+  }, []);
 
   useEffect(() => {
     if (reload) {
       setReload(false);
     }
-    if (loggedInUser?.token && params) {
-      fetchTasksByProjectId(params, loggedInUser?.token);
+    if (params) {
+      fetchTasksByProjectId(params);
     }
-  }, [reload, loggedInUser, params]);
+  }, [reload, params]);
 
   return (
     <div className="flex flex-col gap-4">
-      <CustomBreadCrumb
-        items={[
-          {
-            title: <Link href={"/projects"}>Projects</Link>,
-          },
-          {
-            title: "Tasks",
-          },
-        ]}
-      />
+      <div className="flex justify-between">
+        <CustomBreadCrumb
+          items={[
+            {
+              title: <Link href={"/projects"}>Projects</Link>,
+            },
+            {
+              title: "Tasks",
+            },
+          ]}
+        />
+        <Popover
+          content={
+            <InvitationBox
+              projectId={params.id}
+              openInvitationModal={openInvitationModal}
+              handleClose={handleInvitaionBoxClose}
+            />
+          }
+          className="!w-48"
+          trigger={"click"}
+          open={openInvitationModal}
+          placement="bottomLeft"
+        >
+          <Button onClick={handleInviteClick} className="action-button-active">
+            Invite
+          </Button>
+        </Popover>
+      </div>
       <div className="flex gap-4 overflow-x-auto pb-4">
         {taskStatus.map((status: ITaskStatus) => {
           return (
@@ -134,6 +161,7 @@ const Page = ({ params }: { params: { id: number } }) => {
                     priorityId={task?.priorityId}
                     priorityColor={priorityOfThisProject?.color}
                     priority={priorityOfThisProject?.title}
+                    comments={task?.comments}
                     onClick={() => {
                       handleOpenTaskForm(task);
                     }}
