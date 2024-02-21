@@ -3,6 +3,7 @@ export interface IDeveloper {
     firstName: string;
     lastName: string;
     avatar?: string;
+    invited?: boolean;
 }
 
 export interface IProject {

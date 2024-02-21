@@ -8,7 +8,7 @@ const useUserServices = () => {
     const apiRequest = useApiRequest();
     const [users, setUsers] = useState<IDeveloper[]>([]);
 
-    const fetchAllUsers = ({ searchKey, limit }: { searchKey?: string, limit?: number }) => {
+    const fetchAllUsers = ({ searchKey = "", limit = 10 }: { searchKey?: string, limit?: number }) => {
         apiRequest({
             path: PATHS.ALL_USERS,
             method: "GET",
@@ -18,7 +18,10 @@ const useUserServices = () => {
         });
     };
 
-    return { users, fetchAllUsers }
+    const handleUsers = (value: IDeveloper[]) => {
+        setUsers(value)
+    }
+    return { users, handleUsers, fetchAllUsers }
 }
 
 export default useUserServices

@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useApiRequest } from "../utils/apiService";
 import { AxiosResponse } from "axios";
 import { PATHS } from "../utils/apiConstants";
-import { IProject, IProjectStatus } from "../(protected)/projects/types";
+import { IDeveloper, IProject, IProjectStatus } from "../(protected)/projects/types";
 
 const useProjectServices = () => {
     const apiRequest = useApiRequest();
     const [projects, setProjects] = useState<IProject[]>([]);
     const [projectStatus, setProjectStatus] = useState<IProjectStatus[]>([]);
+    const [users, setUsers] = useState<IDeveloper[]>([]);
 
     const fetchAllProjects = ({ ownerId }: { ownerId: number }) => {
         apiRequest({
@@ -47,7 +48,22 @@ const useProjectServices = () => {
         });
     };
 
-    return { projects, projectStatus, fetchAllProjects, fetchAllProjectStatus, createProject }
+
+    const fetchUsersToInvite = ({ searchKey = "", limit = 10, projectId }: { searchKey?: string, limit?: number, projectId?: number }) => {
+        apiRequest({
+            path: PATHS.SEARCH_USERS_TO_INVITE,
+            method: "POST",
+            params: { searchKey, limit, projectId },
+        }).then((response: AxiosResponse) => {
+            setUsers(response?.data);
+        });
+    };
+
+    const handleUsers = (value: IDeveloper[]) => {
+        setUsers(value)
+    }
+
+    return { users, projects, projectStatus, handleUsers, fetchAllProjects, fetchUsersToInvite, fetchAllProjectStatus, createProject }
 }
 
 export default useProjectServices

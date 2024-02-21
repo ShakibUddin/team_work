@@ -5,6 +5,10 @@ import useUserServices from "@/app/services/useUserServices";
 import { Button } from "antd";
 import SelectField from "../shared/selectField";
 import Search from "antd/es/input/Search";
+import { useApiRequest } from "@/app/utils/apiService";
+import { PATHS } from "@/app/utils/apiConstants";
+import { AxiosResponse } from "axios";
+import useProjectServices from "@/app/services/useProjectServices";
 
 type Props = {
   projectId: number;
@@ -14,8 +18,9 @@ type Props = {
 
 const InvitationBox = (props: Props) => {
   const [searchText, setSearchText] = useState("");
-  const { users, fetchAllUsers } = useUserServices();
-
+  const { users, handleUsers, fetchUsersToInvite } = useProjectServices();
+  const [invitedUsers, setInvitedUser] = useState<number[]>([]);
+  const apiRequest = useApiRequest();
   const handleInvite = ({
     userId,
     projectId,
@@ -23,9 +28,22 @@ const InvitationBox = (props: Props) => {
     userId: number;
     projectId: number;
   }) => {
-    console.log("userId", userId);
-    console.log("projectId", projectId);
+    apiRequest({
+      path: PATHS.INVITE_TO_PROJECT,
+      method: "POST",
+      data: JSON.stringify({ userId, projectId: Number(projectId) }),
+    }).then((response: AxiosResponse) => {
+      setInvitedUser([...invitedUsers, userId]);
+    });
   };
+
+  const closePopOver = () => {
+    setInvitedUser([]);
+    setSearchText("");
+    handleUsers([]);
+    props.handleClose();
+  };
+
   return (
     <div className="w-full">
       <Search
@@ -36,15 +54,22 @@ const InvitationBox = (props: Props) => {
         value={searchText}
         onChange={(e) => {
           setSearchText(e.target.value);
-          fetchAllUsers({ searchKey: e.target.value, limit: 10 });
+          fetchUsersToInvite({
+            searchKey: e.target.value,
+            limit: 10,
+            projectId: Number(props.projectId),
+          });
         }}
       />
       <div className="w-[300px] flex flex-col gap-2 h-[300px] overflow-auto">
         {users.map((user) => {
+          const alreadyInvitedUser =
+            invitedUsers.includes(user?.id) || user?.invited;
           return (
             <div className="flex justify-between">
               <p>{user?.firstName + " " + user?.lastName}</p>
               <Button
+                disabled={alreadyInvitedUser}
                 onClick={() => {
                   handleInvite({
                     userId: user?.id,
@@ -52,18 +77,20 @@ const InvitationBox = (props: Props) => {
                   });
                 }}
               >
-                Send
+                {alreadyInvitedUser ? "Sent" : "Send"}
               </Button>
             </div>
           );
         })}
       </div>
-      <Button
-        className="action-button-active mt-4 w-min ml-auto"
-        onClick={props.handleClose}
-      >
-        Cancel
-      </Button>
+      <div className="flex justify-between mt-4">
+        <Button className="action-button-active w-min" onClick={closePopOver}>
+          Cancel
+        </Button>
+        <Button className="action-button-active w-min" onClick={closePopOver}>
+          Done
+        </Button>
+      </div>
     </div>
   );
 };

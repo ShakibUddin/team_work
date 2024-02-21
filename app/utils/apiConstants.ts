@@ -17,4 +17,6 @@ export const PATHS = {
     UPDATE_PROJECT: "project/update",
     COMMENTS: "task/comment",
     ADD_COMMENT: "task/comment/add",
+    INVITE_TO_PROJECT: "project/invite",
+    SEARCH_USERS_TO_INVITE: "project/search/dev",
 };

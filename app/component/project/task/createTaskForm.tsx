@@ -131,7 +131,7 @@ const CreateTaskForm = (props: Props) => {
       ownerId: loggedInUser?.id || 0,
     });
     fetchAllTaskStatus();
-    fetchAllUsers();
+    fetchAllUsers({});
     fetchAllTaskPriorities();
   }, [loggedInUser]);
 
@@ -266,7 +266,7 @@ const CreateTaskForm = (props: Props) => {
           value={developerName}
           onChange={(value) => {
             setDeveloperName(String(value));
-            fetchAllUsers();
+            fetchAllUsers({});
           }}
           onSelect={(value: string | number, option: any) => {
             if (formik.values.developers) {
